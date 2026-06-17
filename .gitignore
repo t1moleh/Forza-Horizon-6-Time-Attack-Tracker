@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+build/
+dist/
+*.spec
+.venv/
+venv/
+
+# Laufzeit-Daten des Nutzers (nicht ins Repo)
+lap_times.csv
+bestlaps.csv
+ta_trace.csv
+ta_trace_*.csv
+*.xlsx
+diag_log.csv
+laps/
+
+# Archiv alter/erzeugter Dateien (nicht ins Repo)
+archive/
+
+# Fahrzeugbilder (gross + urheberrechtlich sensibel) und Scratch
+car_images/
+car_images_sample/
+labs_cars.html
+fh6cars_tmp.html
+fh6_payload.json
+car_urls.tsv
+
+# Fahrzeugbilder im Web-Ordner (lokal, urheberrechtlich sensibel)
+web/cars/

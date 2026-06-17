@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FH6 Telemetrie-Check</title>
+<style>
+  :root{--bg:#0b0f17;--panel:#151c2b;--line:#283449;--text:#e6edf6;--muted:#8aa0bd;
+        --accent:#36d399;--warn:#fbbf24;--bad:#f87171}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,sans-serif;padding:20px}
+  h1{font-size:17px;margin:0 0 4px}
+  .sub{color:var(--muted);font-size:13px;margin-bottom:16px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;max-width:980px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .lbl{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+  .val{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;margin-top:4px}
+  .val small{font-size:13px;color:var(--muted);font-weight:600}
+  .bar{height:8px;background:#0d1320;border-radius:5px;overflow:hidden;margin-top:8px}
+  .bar > i{display:block;height:100%}
+  .wheels{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px;font-variant-numeric:tabular-nums}
+  .w{background:#0d1320;border-radius:8px;padding:6px 8px;font-size:15px;font-weight:700;text-align:center}
+  .w span{display:block;font-size:10px;color:var(--muted);font-weight:600}
+  .status{margin-bottom:14px;font-size:13px}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#64748b;margin-right:6px}
+  .dot.on{background:var(--accent);box-shadow:0 0 8px var(--accent)}
+</style>
+</head>
+<body>
+  <h1>🔧 FH6 Telemetrie-Check</h1>
+  <div class="sub">Live-Werte zum Verifizieren der Offsets. Im Auto sitzen, fahren, Werte mit dem Spiel vergleichen.</div>
+  <div class="status"><span class="dot" id="dot"></span><span id="st">warte auf Daten…</span></div>
+  <div class="grid" id="grid"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+function card(lbl,val,extra=''){return `<div class="card"><div class="lbl">${lbl}</div><div class="val">${val}</div>${extra}</div>`;}
+function bar(pct,color){return `<div class="bar"><i style="width:${Math.max(0,Math.min(100,pct))}%;background:${color}"></i></div>`;}
+function wheels(o,unit=''){const k=['fl','fr','rl','rr'],n=['VL','VR','HL','HR'];
+  return `<div class="wheels">`+k.map((kk,i)=>`<div class="w">${o&&o[kk]!=null?o[kk]+unit:'–'}<span>${n[i]}</span></div>`).join('')+`</div>`;}
+
+async function tick(){
+  let s;
+  try{ s=await (await fetch('/api/state',{cache:'no-store'})).json(); }
+  catch(e){ $('st').textContent='keine Verbindung zum Tracker'; $('dot').classList.remove('on'); return; }
+  $('dot').classList.toggle('on',!!s.connected);
+  const t=s.telemetry;
+  if(!t){ $('st').textContent = s.in_world?'im Spiel, aber keine Telemetrie':'im Menü (nicht im Spiel)'; $('grid').innerHTML=''; return; }
+  $('st').textContent='im Spiel – Werte live';
+  $('grid').innerHTML =
+    card('Speed', t.speed_kmh+' <small>km/h</small>') +
+    card('Drehzahl', t.rpm+' <small>/ '+t.rpm_max+'</small>') +
+    card('Gang', t.gear) +
+    card('Gas', t.throttle+'<small>%</small>', bar(t.throttle,'var(--accent)')) +
+    card('Bremse', t.brake+'<small>%</small>', bar(t.brake,'var(--bad)')) +
+    card('Lenkung', t.steer+'<small>%</small>') +
+    card('g quer', t.accel_lat_g+' <small>g</small>') +
+    card('g längs', t.accel_long_g+' <small>g</small>') +
+    card('Leistung', t.power_kw+' <small>kW</small>') +
+    card('Drehmoment', t.torque_nm+' <small>Nm</small>') +
+    card('Boost', t.boost) +
+    card('Sprit', Math.round((t.fuel||0)*100)+'<small>%</small>') +
+    card('Reifentemp', '', wheels(t.tire_temp,'°')) +
+    card('Reifen-Slip', '', wheels(t.tire_slip)) +
+    card('Federweg', '', wheels(t.susp_travel));
+}
+tick(); setInterval(tick,150);
+</script>
+</body>
+</html>

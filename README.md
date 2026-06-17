@@ -1,0 +1,82 @@
+# FH6 Time Attack Lap Tracker
+
+A lightweight tool that **automatically records your lap times on the Open‑World
+Time Attack circuits in Forza Horizon 6** and shows them on a clean local
+dashboard — with live telemetry and per‑lap analysis.
+
+Forza Horizon 6 does **not** send the Time Attack lap time over "Data Out", so
+this tool measures laps itself from your position (a GPS stopwatch): it knows
+each circuit's start/finish line and times every flying lap automatically — no
+learning lap, works across car changes.
+
+> **Read‑only.** The tool only *receives* the telemetry packets the game already
+> broadcasts. It never writes to the game or interferes with it (anti‑cheat‑safe).
+
+> **Status: in active development** — feedback and feature wishes very welcome!
+
+## Download & run
+
+1. Download `FH6 Lap Tracker.exe` from the latest [release](#).
+2. In Forza Horizon 6: **Settings → HUD → Data Out = ON**, IP `127.0.0.1`,
+   Port `5300`.
+3. Double‑click the `.exe`. A console window opens and the dashboard opens in
+   your browser at `http://127.0.0.1:8770`. **Keep the console window open while
+   you play** (that is the tracker running).
+4. Drive a Time Attack circuit, times appear automatically. Close the console
+   window (or press `Ctrl+C`) to stop.
+
+No Python needed. On first start the tool creates `circuits.csv`,
+`car_names.csv`, `lap_times.csv` next to the `.exe`.
+
+## Features
+
+- **Automatic lap timing** on Time Attack circuits — flying laps, precise line
+  crossing with time interpolation.
+- **Instant circuit recognition** — known tracks are picked up by position; no
+  learning lap, survives garage/car changes, auto‑switches between circuits.
+- **Live dashboard** (local, dark UI): current car, running lap timer, **live
+  delta** vs. your best lap (green/red), session best, recent laps, cars used.
+- **Telemetry pop‑up**: tyre temperatures, power, torque, throttle/brake (live).
+- **Per‑lap analysis**: click a lap to see speed/throttle/brake/tyre‑slip charts,
+  the sections where you lost the most time vs. your best lap, and concrete
+  **improvement tips**.
+- **Per car & tuning**: lap lists grouped by model + class + PI (different tunes
+  show separately), an overall best‑times ranking per track, and **delete**
+  individual laps.
+- **Excel export** of all times (optional).
+- **German & English** UI.
+
+## Included circuits
+
+Comes pre‑calibrated for: **Legend Island, Hokubu, Soni, Sekibe** (Time Attack).
+More can be added easily — record a lap, and the start/finish line is calibrated
+from your driven line.
+
+## Privacy & fair play
+
+The tool binds a local UDP socket and reads the "Data Out" packets the game
+sends to `127.0.0.1`. It does not read or modify game memory and sends nothing
+anywhere. Your data stays on your PC.
+
+## Roadmap
+
+- Cut‑out car images in the UI (added later)
+- More circuits / community‑contributed start/finish lines
+- Whatever you suggest 🙂
+
+## Build from source (developers)
+
+```bash
+py -m pip install -e ".[dev]"
+py -m pytest                       # tests
+py -m fh6tracker.tracker           # run live + dashboard
+py -m fh6tracker.recorder          # record a calibration trace
+py -m PyInstaller --onefile --noconfirm --name "FH6 Lap Tracker" \
+  --add-data "web;web" --add-data "car_names.csv;." --add-data "circuits.csv;." \
+  fh6_tracker_app.py               # build the .exe (Windows)
+```
+
+## Disclaimer
+
+Not affiliated with Microsoft, Turn 10 or Playground Games. "Forza Horizon" is a
+trademark of Microsoft. Car names are from community data. License: MIT.
