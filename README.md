@@ -52,6 +52,15 @@ Comes pre‑calibrated for: **Legend Island, Hokubu, Soni, Sekibe** (Time Attack
 More can be added easily — record a lap, and the start/finish line is calibrated
 from your driven line.
 
+## A note on the times
+
+The tool uses its own stopwatch (measured from your position), so a lap can
+differ from the in‑game Time Attack timer by a few milliseconds. What matters is
+that it always measures the same way, so every time you record sits on the same
+basis. That makes it ideal for personal use: comparing cars, tunings and
+sessions is fully consistent. For the cleanest times, drive laps without pausing
+or using rewind.
+
 ## Privacy & fair play
 
 The tool binds a local UDP socket and reads the "Data Out" packets the game

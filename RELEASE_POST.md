@@ -35,6 +35,13 @@ Attack. More are easy to add later.
    doing its thing). Close it when you're done.
 4. Drive a Time Attack circuit and watch the times roll in. That's it.
 
+**About the times:** the tool uses its own stopwatch (it measures from your
+position), so a lap can differ from the in-game Time Attack timer by a few
+milliseconds. The point is that it always measures the exact same way, so all
+your times sit on the same basis. That makes it great for personal use:
+comparing cars, tunings and sessions against each other is fully consistent. For
+the cleanest times, drive your laps without pausing or using rewind.
+
 **Is it safe / allowed?** Yep, it's read-only. It just listens to the telemetry
 packets the game already sends to your own PC. It never touches game memory and
 doesn't send your data anywhere. Heads up: Windows might warn about an "unknown
