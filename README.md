@@ -16,6 +16,10 @@ learning lap, works across car changes.
 
 ## Screenshots
 
+**Demo** — a quick look at the live dashboard, lap analysis and telemetry:
+
+https://github.com/user-attachments/assets/76979345-0105-4dce-a057-70502e586234
+
 **Live session** (dark theme): current car, running lap timer and live delta vs. your best lap.
 
 ![Live session](docs/screenshots/session_dark.png)
