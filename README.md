@@ -6,29 +6,29 @@ dashboard — with live telemetry and per‑lap analysis.
 
 ![Session dashboard](https://raw.githubusercontent.com/t1moleh/Forza-Horizon-6-Time-Attack-Tracker/main/docs/session.png)
 
-Forza Horizon 6 does **not** send the Time Attack lap time over “Data Out”, so
+Forza Horizon 6 does **not** send the Time Attack lap time over "Data Out", so
 this tool measures laps itself from your position (a GPS stopwatch): it knows
-each circuit’s start/finish line and times every flying lap automatically — no
+each circuit's start/finish line and times every flying lap automatically — no
 learning lap, works across car changes.
 
 > **Read‑only.** The tool only *receives* the telemetry packets the game already
 > broadcasts to your own PC. It never reads or writes game memory and sends
 > nothing anywhere — anti‑cheat‑safe. Your data stays local.
-> 
+>
 > **Status: in active development** — feedback and feature wishes very welcome!
 
 ### Demo
 
-<https://github.com/user-attachments/assets/76979345-0105-4dce-a057-70502e586234>
+https://github.com/user-attachments/assets/76979345-0105-4dce-a057-70502e586234
 
 ## Download & run
 
 1. Download `FH6 Lap Tracker.exe` from the latest [release](https://github.com/t1moleh/Forza-Horizon-6-Time-Attack-Tracker/releases).
-1. In Forza Horizon 6: **Settings → HUD → Data Out = ON**, IP `127.0.0.1`, Port `5300`.
-1. Double‑click the `.exe`. A console window opens and the dashboard opens in your
+2. In Forza Horizon 6: **Settings → HUD → Data Out = ON**, IP `127.0.0.1`, Port `5300`.
+3. Double‑click the `.exe`. A console window opens and the dashboard opens in your
    browser at `http://127.0.0.1:8770`. **Keep the console window open while you
    play** (that is the tracker running).
-1. Drive a Time Attack circuit — times appear automatically. Close the console
+4. Drive a Time Attack circuit — times appear automatically. Close the console
    window (or press `Ctrl+C`) to stop.
 
 No Python needed. On first start the tool creates `circuits.csv`, `car_names.csv`
@@ -78,9 +78,15 @@ rewind.
 
 ## Privacy & fair play
 
-The tool binds a local UDP socket and reads the “Data Out” packets the game sends
+The tool binds a local UDP socket and reads the "Data Out" packets the game sends
 to `127.0.0.1`. It does not read or modify game memory and sends nothing anywhere.
 Your data stays on your PC.
+
+## Feedback & bug reports
+
+Found a bug, missing a feature, or got an idea? I read every submission. No GitHub or account needed — you can submit anonymously in about a minute:
+
+➡️ **[Send feedback / report a bug](https://tally.so/r/Y5e55q)**
 
 ## Roadmap
 
@@ -102,5 +108,5 @@ py -m PyInstaller --onefile --noconfirm --name "FH6 Lap Tracker" \
 
 ## Disclaimer
 
-Not affiliated with Microsoft, Turn 10 or Playground Games. “Forza Horizon” is a
+Not affiliated with Microsoft, Turn 10 or Playground Games. "Forza Horizon" is a
 trademark of Microsoft. Car names are from community data. License: MIT.
