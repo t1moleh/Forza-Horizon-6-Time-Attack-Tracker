@@ -14,6 +14,24 @@ learning lap, works across car changes.
 
 > **Status: in active development** — feedback and feature wishes very welcome!
 
+## Screenshots
+
+**Live session** (dark theme): current car, running lap timer and live delta vs. your best lap.
+
+![Live session](docs/screenshots/session_dark.png)
+
+| Per‑lap analysis | Compare cars / tunings |
+| --- | --- |
+| ![Per-lap analysis](docs/screenshots/analyze.png) | ![Compare](docs/screenshots/compare.png) |
+
+| Vehicles & times | Overall best times |
+| --- | --- |
+| ![Vehicles](docs/screenshots/vehicles.png) | ![Overall](docs/screenshots/overall.png) |
+
+**Light theme**
+
+![Light theme](docs/screenshots/session_light.png)
+
 ## Download & run
 
 1. Download `FH6 Lap Tracker.exe` from the latest [release](#).
@@ -54,9 +72,10 @@ from your driven line.
 ## Car images (optional)
 
 The dashboard shows a cut‑out image of each car. Around 320 of the most common
-cars are **built into the .exe**, so they just work. Missing ones show a clean
-placeholder, and you can drop your own image onto a car in the UI to add it. The
-images are community renders (source: labs.gg).
+cars are **built into the .exe**, so they just work. **More car images will be
+added in future updates.** Missing ones show a clean placeholder, and you can
+drop your own image onto a car in the UI to add it. The images are community
+renders (source: labs.gg).
 
 ## A note on the times
 
