@@ -1,8 +1,10 @@
 # FH6 Time Attack Lap Tracker
 
-A lightweight tool that **automatically records your lap times on the Open‑World
+A lightweight tool that **automatically records your lap times on the open‑world
 Time Attack circuits in Forza Horizon 6** and shows them on a clean local
 dashboard — with live telemetry and per‑lap analysis.
+
+![Session dashboard](https://raw.githubusercontent.com/t1moleh/Forza-Horizon-6-Time-Attack-Tracker/main/docs/session.png)
 
 Forza Horizon 6 does **not** send the Time Attack lap time over "Data Out", so
 this tool measures laps itself from your position (a GPS stopwatch): it knows
@@ -10,8 +12,9 @@ each circuit's start/finish line and times every flying lap automatically — no
 learning lap, works across car changes.
 
 > **Read‑only.** The tool only *receives* the telemetry packets the game already
-> broadcasts. It never writes to the game or interferes with it (anti‑cheat‑safe).
-
+> broadcasts to your own PC. It never reads or writes game memory and sends
+> nothing anywhere — anti‑cheat‑safe. Your data stays local.
+>
 > **Status: in active development** — feedback and feature wishes very welcome!
 
 ## Screenshots
@@ -46,25 +49,34 @@ https://github.com/user-attachments/assets/76979345-0105-4dce-a057-70502e586234
 4. Drive a Time Attack circuit, times appear automatically. Close the window to
    stop.
 
-No Python needed. On first start the tool creates `circuits.csv`,
-`car_names.csv`, `lap_times.csv` next to the `.exe`.
+No Python needed. On first start the tool creates `circuits.csv`, `car_names.csv`
+and `lap_times.csv` next to the `.exe`.
 
 ## Features
 
-- **Automatic lap timing** on Time Attack circuits — flying laps, precise line
-  crossing with time interpolation.
+- **Automatic lap timing** on Time Attack circuits — flying laps, precise
+  start/finish line crossing with time interpolation.
 - **Instant circuit recognition** — known tracks are picked up by position; no
   learning lap, survives garage/car changes, auto‑switches between circuits.
 - **Live dashboard** (local, dark UI): current car, running lap timer, **live
   delta** vs. your best lap (green/red), session best, recent laps, cars used.
+
+![Overall leaderboard by track](https://raw.githubusercontent.com/t1moleh/Forza-Horizon-6-Time-Attack-Tracker/main/docs/overall.png)
+
+- **Leaderboard by track** and a **per‑car view** grouped by model + class + PI
+  (different tunes show separately), with delete for individual laps.
+
+![Vehicles — all laps grouped by car](https://raw.githubusercontent.com/t1moleh/Forza-Horizon-6-Time-Attack-Tracker/main/docs/vehicles.png)
+
+- **Per‑lap analysis**: click a lap to see speed / throttle / brake / tyre‑slip
+  charts, the sections where you lost the most time vs. your best lap, and
+  concrete **improvement tips**.
+
+![Per‑lap analysis](https://raw.githubusercontent.com/t1moleh/Forza-Horizon-6-Time-Attack-Tracker/main/docs/analyze.png)
+
 - **Telemetry pop‑up**: tyre temperatures, power, torque, throttle/brake (live).
-- **Per‑lap analysis**: click a lap to see speed/throttle/brake/tyre‑slip charts,
-  the sections where you lost the most time vs. your best lap, and concrete
-  **improvement tips**.
-- **Per car & tuning**: lap lists grouped by model + class + PI (different tunes
-  show separately), an overall best‑times ranking per track, and **delete**
-  individual laps.
-- **Excel export** of all times (optional).
+- **Three visual themes** (Technical / Digital / Sporty).
+- **Excel export** of all times.
 - **German & English** UI.
 
 ## Included circuits
@@ -98,9 +110,15 @@ Detecting and invalidating such laps automatically is planned for a later update
 
 ## Privacy & fair play
 
-The tool binds a local UDP socket and reads the "Data Out" packets the game
-sends to `127.0.0.1`. It does not read or modify game memory and sends nothing
-anywhere. Your data stays on your PC.
+The tool binds a local UDP socket and reads the "Data Out" packets the game sends
+to `127.0.0.1`. It does not read or modify game memory and sends nothing anywhere.
+Your data stays on your PC.
+
+## Feedback & bug reports
+
+Found a bug, missing a feature, or got an idea? I read every submission. No GitHub or account needed — you can submit anonymously in about a minute:
+
+➡️ **[Send feedback / report a bug](https://tally.so/r/Y5e55q)**
 
 ## Roadmap
 
@@ -111,7 +129,7 @@ anywhere. Your data stays on your PC.
 
 ## Build from source (developers)
 
-```bash
+```
 py -m pip install -e ".[dev]"
 py -m pytest                       # tests
 py -m fh6tracker.tracker           # run live + dashboard
