@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FH6 Tracker — Töne anhören</title>
+<style>
+  :root{--bg:#0b0f17;--panel:#151c2b;--line:#283449;--text:#e6edf6;--muted:#8aa0bd;--accent:#36d399}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"Segoe UI",system-ui,sans-serif;padding:28px}
+  h1{font-size:19px;margin:0 0 4px}
+  p{color:var(--muted);font-size:14px;margin:0 0 20px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;max-width:820px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;
+        display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .name{font-weight:700}
+  .desc{font-size:12px;color:var(--muted);margin-top:2px}
+  button{background:var(--accent);color:#06281c;border:none;border-radius:9px;font-weight:800;
+         padding:10px 14px;cursor:pointer;font-size:14px}
+  button:hover{filter:brightness(1.08)}
+  .key{font-family:monospace;font-size:11px;color:var(--muted)}
+</style>
+</head>
+<body>
+  <h1>🔊 FH6 Tracker — Töne anhören</h1>
+  <p>Klick auf „▶ Abspielen", um jeden Ton zu hören. Sag mir danach, welcher Ton für
+     <b>Rundenstart</b> und welcher für <b>Rundenende</b> passt (eigener „neue Bestzeit"-Ton optional).</p>
+  <div class="grid" id="grid"></div>
+
+<script>
+const AC = new (window.AudioContext || window.webkitAudioContext)();
+function tone(freq, start, dur, type="sine", gain=0.25){
+  const o=AC.createOscillator(), g=AC.createGain();
+  o.type=type; o.frequency.value=freq; o.connect(g); g.connect(AC.destination);
+  const t0=AC.currentTime+start;
+  g.gain.setValueAtTime(0.0001,t0);
+  g.gain.exponentialRampToValueAtTime(gain,t0+0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+  o.start(t0); o.stop(t0+dur+0.03);
+}
+// Ton-Bibliothek (genau diese kommen auch ins Dashboard)
+const SOUNDS = {
+  beep:        ()=>tone(880,0,0.15),
+  double:      ()=>{tone(880,0,0.10);tone(880,0.14,0.10);},
+  blip:        ()=>tone(1320,0,0.09,"square",0.18),
+  soft:        ()=>tone(660,0,0.28,"triangle",0.28),
+  chime_up:    ()=>{tone(660,0,0.13);tone(990,0.12,0.20);},
+  chime_down:  ()=>{tone(990,0,0.13);tone(660,0.12,0.20);},
+  start_lights:()=>{tone(700,0,0.12,"square",0.16);tone(700,0.28,0.12,"square",0.16);tone(700,0.56,0.12,"square",0.16);tone(1100,0.9,0.32,"sawtooth",0.2);},
+  success:     ()=>{tone(523,0,0.12);tone(659,0.12,0.12);tone(784,0.24,0.26);},
+};
+const META = {
+  beep:["Beep","kurzer, klarer Piepton"],
+  double:["Doppel-Beep","zwei schnelle Pieptöne"],
+  blip:["Blip","kurz & hoch (Square)"],
+  soft:["Soft","sanfter, weicher Ton"],
+  chime_up:["Chime hoch","zwei steigende Noten"],
+  chime_down:["Chime runter","zwei fallende Noten"],
+  start_lights:["Startampel","3x kurz + „Go" (F1-Stil)"],
+  success:["Success","kleine Tonfolge C-E-G (z. B. Bestzeit)"],
+};
+const grid=document.getElementById("grid");
+for(const key of Object.keys(SOUNDS)){
+  const [name,desc]=META[key];
+  const c=document.createElement("div"); c.className="card";
+  c.innerHTML=`<div><div class="name">${name}</div><div class="desc">${desc}</div>
+    <div class="key">${key}</div></div>`;
+  const b=document.createElement("button"); b.textContent="▶ Abspielen";
+  b.onclick=()=>{ if(AC.state==="suspended") AC.resume(); SOUNDS[key](); };
+  c.appendChild(b); grid.appendChild(c);
+}
+</script>
+</body>
+</html>
