@@ -66,8 +66,14 @@ The tool uses its own stopwatch (measured from your position), so a lap can
 differ from the in‑game Time Attack timer by a few milliseconds. What matters is
 that it always measures the same way, so every time you record sits on the same
 basis. That makes it ideal for personal use: comparing cars, tunings and
-sessions is fully consistent. For the cleanest times, drive laps without pausing
-or using rewind.
+sessions is fully consistent.
+
+**Pause and rewind:** for valid times, drive your laps without pausing or using
+rewind. If you pause (the game leaves the active session), the current lap is
+discarded and timing simply re-arms when you next cross the start/finish line, so
+no wrong time is recorded. Rewind, however, is not compensated yet: the stopwatch
+keeps running, so a lap that includes a rewind gets an inflated, unreliable time.
+Detecting and invalidating such laps automatically is planned for a later update.
 
 ## Privacy & fair play
 
