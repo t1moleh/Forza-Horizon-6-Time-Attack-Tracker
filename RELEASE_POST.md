@@ -48,10 +48,15 @@ doesn't send your data anywhere. Heads up: Windows might warn about an "unknown
 publisher" when you open it, which is normal for small tools like this. The full
 source code is on GitHub if you want to check it or build it yourself.
 
-**Important: this is an early version and I'm still working on it.** A few things
-aren't done yet on purpose. For example the cut-out car images in the UI will be
-added later. I'd really love your feedback, bug reports and feature ideas, so
-please drop them in the comments and I'll do my best to add them. 🙏
+**Optional car images:** the dashboard can show a cut-out picture of each car.
+Grab the separate "cars" pack from the release and extract it next to the .exe
+(about 320 of the most common cars are included; the rest show a placeholder and
+you can drop in your own image). The images are community renders, so they ship
+as an optional pack, not inside the tool.
+
+**Important: this is an early version and I'm still working on it.** I'd really
+love your feedback, bug reports and feature ideas, so please drop them in the
+comments and I'll do my best to add them. 🙏
 
 GitHub: <link>
 Screenshots below 👇

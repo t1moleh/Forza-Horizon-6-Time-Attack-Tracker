@@ -29,5 +29,9 @@ fh6cars_tmp.html
 fh6_payload.json
 car_urls.tsv
 
-# Fahrzeugbilder im Web-Ordner (lokal, urheberrechtlich sensibel)
+# Fahrzeugbilder (lokal, urheberrechtlich sensibel) + Build-Scratch
 web/cars/
+cars/
+cars.zip
+car_images_manifest.csv
+car_build*.log

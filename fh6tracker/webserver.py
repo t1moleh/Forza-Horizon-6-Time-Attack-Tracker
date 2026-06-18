@@ -33,11 +33,13 @@ _CONTENT_TYPES = {
 class _Handler(BaseHTTPRequestHandler):
     def __init__(self, *args, snapshot_fn: Callable[[], dict], web_dir: str,
                  lap_fn: Callable[[str], dict | None] | None = None,
-                 delete_fn: Callable[[str], bool] | None = None, **kwargs):
+                 delete_fn: Callable[[str], bool] | None = None,
+                 cars_dir: str | None = None, **kwargs):
         self._snapshot_fn = snapshot_fn
         self._web_dir = web_dir
         self._lap_fn = lap_fn
         self._delete_fn = delete_fn
+        self._cars_dir = cars_dir
         super().__init__(*args, **kwargs)
 
     def log_message(self, *args):  # still: keine Konsolen-Spam
@@ -86,7 +88,15 @@ class _Handler(BaseHTTPRequestHandler):
         if rel.startswith("..") or os.path.isabs(rel):
             self.send_error(403)
             return
-        full = os.path.join(self._web_dir, rel)
+        # Fahrzeugbilder: zuerst aus dem cars/-Ordner neben der App (optional,
+        # nicht mitgebuendelt), sonst normaler web/-Ordner.
+        full = None
+        if rel.startswith("cars/") and self._cars_dir:
+            cand = os.path.join(self._cars_dir, rel[len("cars/"):])
+            if os.path.isfile(cand):
+                full = cand
+        if full is None:
+            full = os.path.join(self._web_dir, rel)
         if not os.path.isfile(full):
             self.send_error(404)
             return
@@ -107,10 +117,11 @@ def start_web_server(
     web_dir: str = WEB_DIR,
     lap_fn: Callable[[str], dict | None] | None = None,
     delete_fn: Callable[[str], bool] | None = None,
+    cars_dir: str | None = None,
 ) -> ThreadingHTTPServer:
     """Startet den Server in einem Daemon-Thread und gibt ihn zurueck."""
     handler = partial(_Handler, snapshot_fn=snapshot_fn, web_dir=web_dir,
-                      lap_fn=lap_fn, delete_fn=delete_fn)
+                      lap_fn=lap_fn, delete_fn=delete_fn, cars_dir=cars_dir)
     httpd = ThreadingHTTPServer((host, port), handler)
     threading.Thread(target=httpd.serve_forever, daemon=True).start()
     return httpd

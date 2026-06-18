@@ -52,6 +52,15 @@ Comes pre‑calibrated for: **Legend Island, Hokubu, Soni, Sekibe** (Time Attack
 More can be added easily — record a lap, and the start/finish line is calibrated
 from your driven line.
 
+## Car images (optional)
+
+The dashboard can show a cut‑out image of each car. These are optional: download
+the `cars.zip` pack from the release and extract it so that a `cars/` folder sits
+**next to the .exe**. Around 320 of the most common cars are covered; missing
+ones simply show a placeholder, and you can drop your own image onto a car in the
+UI to add it. The images are community renders (source: labs.gg); they are not
+bundled with the tool.
+
 ## A note on the times
 
 The tool uses its own stopwatch (measured from your position), so a lap can
@@ -69,8 +78,9 @@ anywhere. Your data stays on your PC.
 
 ## Roadmap
 
-- Cut‑out car images in the UI (added later)
+- More cut‑out car images (currently ~320 of the most common cars)
 - More circuits / community‑contributed start/finish lines
+- Optional native app window instead of the browser dashboard
 - Whatever you suggest 🙂
 
 ## Build from source (developers)

@@ -165,7 +165,8 @@ def run_live(data_dir: str, host: str, port: int,
         try:
             kw = {"web_dir": web_dir} if web_dir else {}
             start_web_server(lambda: build_state(session, paths["log"], paths["traces"]),
-                             port=web_port, lap_fn=lap_fn, delete_fn=delete_fn, **kw)
+                             port=web_port, lap_fn=lap_fn, delete_fn=delete_fn,
+                             cars_dir=os.path.join(data_dir, "cars"), **kw)
             web_url = f"http://127.0.0.1:{web_port}"
             try:
                 import webbrowser
