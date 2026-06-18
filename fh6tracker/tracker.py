@@ -16,6 +16,7 @@ import csv
 import os
 import socket
 import sys
+import threading
 import time
 from datetime import datetime
 
@@ -91,6 +92,22 @@ def load_lap_analysis(paths: dict[str, str], lap_id: str) -> dict | None:
     }
 
 
+def _webview_available() -> bool:
+    try:
+        import webview  # noqa: F401
+        return True
+    except Exception:
+        return False
+
+
+def _open_browser(url: str) -> None:
+    try:
+        import webbrowser
+        webbrowser.open(url)
+    except Exception:
+        pass
+
+
 def _print_best(rows) -> None:
     if not rows:
         return
@@ -140,7 +157,7 @@ def _handle_event(ev: LapEvent, names: NameStore, paths: dict[str, str],
 
 def run_live(data_dir: str, host: str, port: int,
              web: bool = True, web_port: int = 8770,
-             web_dir: str | None = None) -> None:
+             web_dir: str | None = None, window: bool = True) -> None:
     engine, names, store, paths = _make_engine(data_dir, save_new_circuits=True)
     session = SessionState()
     ghost = GhostComparer()
@@ -168,35 +185,36 @@ def run_live(data_dir: str, host: str, port: int,
                              port=web_port, lap_fn=lap_fn, delete_fn=delete_fn,
                              cars_dir=os.path.join(data_dir, "cars"), **kw)
             web_url = f"http://127.0.0.1:{web_port}"
-            try:
-                import webbrowser
-                webbrowser.open(web_url)
-            except Exception:
-                pass
         except OSError as e:
             print(f"  (Web-Dashboard konnte nicht starten: {e})")
+
+    use_window = bool(window and web_url and _webview_available())
 
     print("=" * 62)
     print("  FH6 Time-Attack-Tracker laeuft")
     print(f"  UDP-Port {port}  |  bekannte Strecken: {len(store.items)}")
-    if web_url:
-        print(f"  Dashboard: {web_url}")
-    print("  Auf einen Circuit fahren - bekannte Strecken werden sofort")
-    print("  erkannt, unbekannte nach der ersten vollen Runde gelernt.")
-    print("  Beenden mit Strg+C.")
+    if use_window:
+        print("  UI: eigenes Programmfenster")
+    elif web_url:
+        print(f"  Dashboard im Browser: {web_url}")
+    print("  Auf einen Circuit fahren - bekannte Strecken werden sofort erkannt.")
+    print("  Beenden: Fenster schliessen." if use_window else "  Beenden mit Strg+C.")
     print("=" * 62)
 
-    last_status = 0.0
-    # Telemetrie-Puffer der laufenden Runde (fuer die Per-Runde-Spur)
-    buf = tr.empty_channels()
-    buf_start: float | None = None
-    last_sd = -1e9
-    try:
-        while True:
+    stop = threading.Event()
+
+    def udp_loop():
+        last_status = 0.0
+        buf = tr.empty_channels()
+        buf_start = None
+        last_sd = -1e9
+        while not stop.is_set():
             try:
                 data, _ = sock.recvfrom(4096)
             except socket.timeout:
                 continue
+            except OSError:
+                break
             pkt = tel.parse(data)
             if pkt is None:
                 continue
@@ -245,10 +263,35 @@ def run_live(data_dir: str, host: str, port: int,
                 where = engine.circuit_name or "suche Start/Ziel"
                 state = "Runde laeuft" if engine.lap_start_t is not None else "bereit"
                 print(f"  ... {where}  [{state}]  (gefahren: {engine.path_dist:.0f} m)")
-    except KeyboardInterrupt:
-        print("\nBeendet. Zeiten in lap_times.csv und bestlaps.csv.")
-    finally:
+    if use_window:
+        threading.Thread(target=udp_loop, daemon=True).start()
+        try:
+            import webview
+            webview.create_window("FH6 Time Attack Tracker", web_url,
+                                  width=1280, height=820, min_size=(900, 600))
+            webview.start()
+        except Exception as e:
+            print(f"  (Eigenes Fenster nicht moeglich: {e}; oeffne Browser)")
+            _open_browser(web_url)
+            try:
+                while not stop.is_set():
+                    time.sleep(0.5)
+            except KeyboardInterrupt:
+                pass
+    else:
+        if web_url:
+            _open_browser(web_url)
+        try:
+            udp_loop()
+        except KeyboardInterrupt:
+            pass
+
+    stop.set()
+    try:
         sock.close()
+    except OSError:
+        pass
+    print("\nBeendet. Zeiten in lap_times.csv und bestlaps.csv.")
 
 
 # -- Replay ------------------------------------------------------------------
@@ -310,6 +353,8 @@ def main(argv: list[str] | None = None) -> None:
     ap.add_argument("--port", type=int, default=5300)
     ap.add_argument("--host", default="0.0.0.0")
     ap.add_argument("--no-web", action="store_true", help="Web-Dashboard nicht starten")
+    ap.add_argument("--no-window", action="store_true",
+                    help="kein eigenes Fenster - Dashboard im Browser oeffnen")
     ap.add_argument("--web-port", type=int, default=8770)
     args = ap.parse_args(argv)
 
@@ -321,7 +366,8 @@ def main(argv: list[str] | None = None) -> None:
         run_replay(args.replay, data_dir, args.save_circuit)
     else:
         run_live(data_dir, args.host, args.port,
-                 web=not args.no_web, web_port=args.web_port, web_dir=web_dir)
+                 web=not args.no_web, web_port=args.web_port, web_dir=web_dir,
+                 window=not args.no_window)
 
 
 if __name__ == "__main__":

@@ -19,11 +19,10 @@ learning lap, works across car changes.
 1. Download `FH6 Lap Tracker.exe` from the latest [release](#).
 2. In Forza Horizon 6: **Settings → HUD → Data Out = ON**, IP `127.0.0.1`,
    Port `5300`.
-3. Double‑click the `.exe`. A console window opens and the dashboard opens in
-   your browser at `http://127.0.0.1:8770`. **Keep the console window open while
-   you play** (that is the tracker running).
-4. Drive a Time Attack circuit, times appear automatically. Close the console
-   window (or press `Ctrl+C`) to stop.
+3. Double‑click the `.exe`. The dashboard opens in **its own app window** (a
+   small console window also stays open in the background while it runs).
+4. Drive a Time Attack circuit, times appear automatically. Close the window to
+   stop.
 
 No Python needed. On first start the tool creates `circuits.csv`,
 `car_names.csv`, `lap_times.csv` next to the `.exe`.
@@ -80,7 +79,7 @@ anywhere. Your data stays on your PC.
 
 - More cut‑out car images (currently ~320 of the most common cars)
 - More circuits / community‑contributed start/finish lines
-- Optional native app window instead of the browser dashboard
+- Side‑by‑side compare of two cars/tunings
 - Whatever you suggest 🙂
 
 ## Build from source (developers)

@@ -30,9 +30,8 @@ Attack. More are easy to add later.
 **How to use it**
 1. Grab the .exe from the link below (no Python or install needed)
 2. In FH6 go to Settings, HUD, Data Out = ON, IP 127.0.0.1, Port 5300
-3. Run the .exe. A small black console window opens and your browser opens the
-   dashboard. Keep that console window open while you play (that's the tracker
-   doing its thing). Close it when you're done.
+3. Run the .exe. The dashboard opens in its own app window (a little console
+   window also stays open in the background while it runs).
 4. Drive a Time Attack circuit and watch the times roll in. That's it.
 
 **About the times:** the tool uses its own stopwatch (it measures from your
