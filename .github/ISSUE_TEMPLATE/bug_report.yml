@@ -1,0 +1,62 @@
+name: Bug report
+description: Report a problem with the FH6 Time Attack Tracker
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping improve the tracker! Fill in what you can — even a short
+        description helps.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      placeholder: "e.g. v0.2.0 (see the release you downloaded)"
+    validations:
+      required: false
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What went wrong, and what did you expect instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Started the .exe
+        2. Drove ...
+        3. ...
+    validations:
+      required: false
+  - type: input
+    id: context
+    attributes:
+      label: Track / car / tuning (if relevant)
+      placeholder: "e.g. Legend Island, 2023 Porsche 911 GT3 RS, S2 886"
+    validations:
+      required: false
+  - type: dropdown
+    id: dataout
+    attributes:
+      label: Is "Data Out" ON in FH6 (IP 127.0.0.1, Port 5300)?
+      options:
+        - "Yes"
+        - "No"
+        - "Not sure"
+    validations:
+      required: false
+  - type: textarea
+    id: console
+    attributes:
+      label: Console window output / error (if any)
+      description: Copy any text from the small console window, especially errors.
+      render: text
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: "Tip: you can drag screenshots straight into any text box above."

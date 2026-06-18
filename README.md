@@ -89,10 +89,16 @@ py -m pip install -e ".[dev]"
 py -m pytest                       # tests
 py -m fh6tracker.tracker           # run live + dashboard
 py -m fh6tracker.recorder          # record a calibration trace
-py -m PyInstaller --onefile --noconfirm --name "FH6 Lap Tracker" \
+py -m PyInstaller --onefile --noconfirm --clean --name "FH6 Lap Tracker" \
+  --collect-all webview \
   --add-data "web;web" --add-data "car_names.csv;." --add-data "circuits.csv;." \
   fh6_tracker_app.py               # build the .exe (Windows)
 ```
+
+## Feedback & bugs
+
+Found a bug or have an idea? Open an issue using the **Bug report** or
+**Feature request** template under the repo's Issues tab. Feedback is very welcome!
 
 ## Disclaimer
 
