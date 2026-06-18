@@ -4,8 +4,6 @@ A lightweight tool that **automatically records your lap times on the open‑wor
 Time Attack circuits in Forza Horizon 6** and shows them on a clean local
 dashboard — with live telemetry and per‑lap analysis.
 
-![Session dashboard](https://raw.githubusercontent.com/t1moleh/Forza-Horizon-6-Time-Attack-Tracker/main/docs/session.png)
-
 Forza Horizon 6 does **not** send the Time Attack lap time over "Data Out", so
 this tool measures laps itself from your position (a GPS stopwatch): it knows
 each circuit's start/finish line and times every flying lap automatically — no
@@ -58,24 +56,19 @@ and `lap_times.csv` next to the `.exe`.
   start/finish line crossing with time interpolation.
 - **Instant circuit recognition** — known tracks are picked up by position; no
   learning lap, survives garage/car changes, auto‑switches between circuits.
-- **Live dashboard** (local, dark UI): current car, running lap timer, **live
-  delta** vs. your best lap (green/red), session best, recent laps, cars used.
-
-![Overall leaderboard by track](https://raw.githubusercontent.com/t1moleh/Forza-Horizon-6-Time-Attack-Tracker/main/docs/overall.png)
-
-- **Leaderboard by track** and a **per‑car view** grouped by model + class + PI
-  (different tunes show separately), with delete for individual laps.
-
-![Vehicles — all laps grouped by car](https://raw.githubusercontent.com/t1moleh/Forza-Horizon-6-Time-Attack-Tracker/main/docs/vehicles.png)
-
+- **Live dashboard** (local): current car, running lap timer, **live delta** vs.
+  your best lap (green/red), session best, recent laps, cars used.
+- **Telemetry pop‑up**: tyre temperatures, power, torque, throttle/brake (live).
 - **Per‑lap analysis**: click a lap to see speed / throttle / brake / tyre‑slip
   charts, the sections where you lost the most time vs. your best lap, and
   concrete **improvement tips**.
-
-![Per‑lap analysis](https://raw.githubusercontent.com/t1moleh/Forza-Horizon-6-Time-Attack-Tracker/main/docs/analyze.png)
-
-- **Telemetry pop‑up**: tyre temperatures, power, torque, throttle/brake (live).
-- **Three visual themes** (Technical / Digital / Sporty).
+- **Compare** two cars or tunings side by side.
+- **Per car & tuning**: lap lists grouped by model + class + PI (different tunes
+  show separately), an overall best‑times ranking per track, and **delete**
+  individual laps.
+- **Sound signals**: double‑beep at the finish, beep at the start, a chime on a
+  personal best — configurable.
+- **Dark and Light theme**.
 - **Excel export** of all times.
 - **German & English** UI.
 
@@ -114,17 +107,19 @@ The tool binds a local UDP socket and reads the "Data Out" packets the game send
 to `127.0.0.1`. It does not read or modify game memory and sends nothing anywhere.
 Your data stays on your PC.
 
-## Feedback & bug reports
+## Feedback & bugs
 
-Found a bug, missing a feature, or got an idea? I read every submission. No GitHub or account needed — you can submit anonymously in about a minute:
+Found a bug, missing a feature, or got an idea? I read every submission.
 
-➡️ **[Send feedback / report a bug](https://tally.so/r/Y5e55q)**
+- **No account needed:** [send feedback / report a bug via the form](https://tally.so/r/Y5e55q)
+  (about a minute, anonymous).
+- Or open a **Bug report** / **Feature request** issue on GitHub.
 
 ## Roadmap
 
 - More cut‑out car images (currently ~320 of the most common cars)
 - More circuits / community‑contributed start/finish lines
-- Side‑by‑side compare of two cars/tunings
+- Automatic detection / invalidation of laps with rewind
 - Whatever you suggest 🙂
 
 ## Build from source (developers)
@@ -134,17 +129,12 @@ py -m pip install -e ".[dev]"
 py -m pytest                       # tests
 py -m fh6tracker.tracker           # run live + dashboard
 py -m fh6tracker.recorder          # record a calibration trace
-cp -r cars/* web/cars/           # bundle car images into the build (web/cars)
+cp -r cars/* web/cars/             # bundle car images into the build (web/cars)
 py -m PyInstaller --onefile --noconfirm --clean --name "FH6 Lap Tracker" \
   --icon "icon.ico" --collect-all webview \
   --add-data "web;web" --add-data "car_names.csv;." --add-data "circuits.csv;." \
   fh6_tracker_app.py               # build the .exe (Windows)
 ```
-
-## Feedback & bugs
-
-Found a bug or have an idea? Open an issue using the **Bug report** or
-**Feature request** template under the repo's Issues tab. Feedback is very welcome!
 
 ## Disclaimer
 
