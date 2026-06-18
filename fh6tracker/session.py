@@ -28,6 +28,7 @@ class SessionLap:
     timestamp: float          # perf_counter beim Ziel
     approximate: bool
     is_best: bool = False     # Session-Bestzeit dieser (Auto, Strecke)-Kombi
+    is_record: bool = False   # persoenliche Bestzeit all-time (Auto, Strecke)
 
 
 @dataclass
@@ -83,8 +84,9 @@ class SessionState:
             self._lap_start_perf = lap_start_perf
             self._live_delta = live_delta
 
-    def add_lap(self, ev: LapEvent, car_name: str) -> bool:
-        """Runde aufnehmen. Gibt True zurueck, wenn es eine neue Session-Bestzeit
+    def add_lap(self, ev: LapEvent, car_name: str, is_record: bool = False) -> bool:
+        """Runde aufnehmen. `is_record` = persoenliche Bestzeit all-time (vom
+        Aufrufer ermittelt). Gibt True zurueck, wenn es eine neue Session-Bestzeit
         dieser (Auto, Strecke)-Kombi ist."""
         with self._lock:
             is_best = False
@@ -103,6 +105,7 @@ class SessionState:
                 timestamp=time.perf_counter(),
                 approximate=ev.approximate,
                 is_best=is_best,
+                is_record=is_record,
             ))
             return is_best
 
@@ -166,4 +169,5 @@ class SessionState:
             "pi": lp.pi,
             "track": lp.track,
             "is_best": lp.is_best,
+            "is_record": lp.is_record,
         }

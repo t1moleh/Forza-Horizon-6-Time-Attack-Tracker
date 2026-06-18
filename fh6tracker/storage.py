@@ -107,6 +107,25 @@ def delete_lap(log_path: str, lap_id: str, traces_dir: str | None = None,
     return True
 
 
+def is_personal_best(log_path: str, car: str, track: str, lap_seconds: float) -> bool:
+    """True, wenn lap_seconds schneller ist als jede bisher geloggte Zeit dieser
+    (Auto, Strecke)-Kombi (all-time persoenliche Bestzeit). Vor dem Loggen der
+    neuen Runde aufrufen."""
+    best = None
+    if os.path.exists(log_path):
+        with open(log_path, newline="", encoding="utf-8") as fh:
+            for r in csv.DictReader(fh):
+                if r.get("auto") != car or r.get("strecke") != track:
+                    continue
+                try:
+                    t = float(r["rundenzeit_s"])
+                except (ValueError, KeyError):
+                    continue
+                if best is None or t < best:
+                    best = t
+    return best is None or lap_seconds < best
+
+
 def _migrate_log(path: str) -> None:
     """Hebt eine alte Kopfzeile (ohne lap_id) auf das aktuelle Format an.
 

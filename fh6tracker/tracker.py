@@ -29,7 +29,8 @@ from .ghost import GhostComparer
 from . import traces as tr
 from .session import SessionState
 from .snapshot import build_state
-from .storage import NameStore, delete_lap, ensure_log, log_lap, rebuild_bestlaps
+from .storage import (NameStore, delete_lap, ensure_log, is_personal_best,
+                      log_lap, rebuild_bestlaps)
 from .util import fmt_time
 from .webserver import start_web_server
 
@@ -242,7 +243,11 @@ def run_live(data_dir: str, host: str, port: int,
                         "time_seconds": round(ev.lap_time, 3),
                         "time": fmt_time(ev.lap_time), "channels": buf,
                     })
-                is_best = session.add_lap(ev, names.display(ev.car.ordinal))
+                car_name = names.display(ev.car.ordinal)
+                # persoenliche Bestzeit (all-time) VOR dem Loggen pruefen
+                record = (not ev.approximate and
+                          is_personal_best(paths["log"], car_name, ev.circuit, ev.lap_time))
+                is_best = session.add_lap(ev, car_name, is_record=record)
                 if not ev.approximate:
                     ghost.consider(ev.car.ordinal, ev.circuit, ev.lap_time, ev.profile)
                 _handle_event(ev, names, paths, is_best=is_best, lap_id=lap_id)
