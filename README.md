@@ -39,7 +39,7 @@ https://github.com/user-attachments/assets/76979345-0105-4dce-a057-70502e586234
 
 ## Download & run
 
-1. Download `FH6 Lap Tracker.exe` from the latest [release](#).
+1. Download `FH6 Lap Tracker.exe` from the latest [release](https://github.com/t1moleh/Forza-Horizon-6-Time-Attack-Tracker/releases/latest).
 2. In Forza Horizon 6: **Settings → HUD → Data Out = ON**, IP `127.0.0.1`,
    Port `5300`.
 3. Double‑click the `.exe`. The dashboard opens in **its own app window** (a
