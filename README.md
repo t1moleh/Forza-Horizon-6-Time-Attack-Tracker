@@ -53,12 +53,10 @@ from your driven line.
 
 ## Car images (optional)
 
-The dashboard can show a cut‑out image of each car. These are optional: download
-the `cars.zip` pack from the release and extract it so that a `cars/` folder sits
-**next to the .exe**. Around 320 of the most common cars are covered; missing
-ones simply show a placeholder, and you can drop your own image onto a car in the
-UI to add it. The images are community renders (source: labs.gg); they are not
-bundled with the tool.
+The dashboard shows a cut‑out image of each car. Around 320 of the most common
+cars are **built into the .exe**, so they just work. Missing ones show a clean
+placeholder, and you can drop your own image onto a car in the UI to add it. The
+images are community renders (source: labs.gg).
 
 ## A note on the times
 
@@ -95,8 +93,9 @@ py -m pip install -e ".[dev]"
 py -m pytest                       # tests
 py -m fh6tracker.tracker           # run live + dashboard
 py -m fh6tracker.recorder          # record a calibration trace
+cp -r cars/* web/cars/           # bundle car images into the build (web/cars)
 py -m PyInstaller --onefile --noconfirm --clean --name "FH6 Lap Tracker" \
-  --collect-all webview \
+  --icon "icon.ico" --collect-all webview \
   --add-data "web;web" --add-data "car_names.csv;." --add-data "circuits.csv;." \
   fh6_tracker_app.py               # build the .exe (Windows)
 ```
