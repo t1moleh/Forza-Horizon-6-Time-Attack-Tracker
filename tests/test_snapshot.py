@@ -4,7 +4,8 @@ import os
 
 from fh6tracker.engine import LapEvent
 from fh6tracker.session import SessionState
-from fh6tracker.snapshot import build_by_car, build_overall, build_state
+from fh6tracker.snapshot import (build_by_car, build_overall, build_state,
+                                 load_car_meta)
 from fh6tracker.telemetry import Packet
 
 
@@ -32,6 +33,34 @@ def test_build_overall_ranks_per_track(tmp_path):
     assert overall[0]["time_seconds"] == 76.0
     assert overall[1]["rank"] == 2
     assert overall[1]["time_seconds"] == 91.0  # Ferrari-Bestzeit, nicht 92.5
+
+
+def test_build_overall_enriches_year_type_country(tmp_path):
+    log = str(tmp_path / "lap_times.csv")
+    _write_log(log)
+    meta_path = str(tmp_path / "car_meta.csv")
+    with open(meta_path, "w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow(["car_ordinal", "car_name", "type", "country"])
+        w.writerow(["253", "1994 Ferrari 355", "Retro Supercars", "Italy"])
+        # Porsche (3781) absichtlich NICHT in den Metadaten -> leer, kein Fehler
+    meta = load_car_meta(meta_path)
+    overall = build_overall(log, meta)
+    ferrari = next(e for e in overall if e["car_name"] == "Ferrari 355")
+    porsche = next(e for e in overall if e["car_name"] == "Porsche 911")
+    assert ferrari["type"] == "Retro Supercars"
+    assert ferrari["country"] == "Italy"
+    assert porsche["type"] == "" and porsche["country"] == ""   # Luecke -> leer
+    # Jahr wird aus dem Namenspraefix gelesen (hier ohne Jahr -> leer)
+    assert ferrari["year"] == ""
+
+
+def test_build_overall_without_meta_has_empty_fields(tmp_path):
+    log = str(tmp_path / "lap_times.csv")
+    _write_log(log)
+    for e in build_overall(log):           # kein meta -> Felder vorhanden, leer
+        assert e["type"] == "" and e["country"] == ""
+        assert "year" in e
 
 
 def test_build_by_car_separates_tunings_by_pi(tmp_path):

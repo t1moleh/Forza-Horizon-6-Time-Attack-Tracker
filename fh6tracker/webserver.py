@@ -34,12 +34,18 @@ class _Handler(BaseHTTPRequestHandler):
     def __init__(self, *args, snapshot_fn: Callable[[], dict], web_dir: str,
                  lap_fn: Callable[[str], dict | None] | None = None,
                  delete_fn: Callable[[str], bool] | None = None,
-                 cars_dir: str | None = None, **kwargs):
+                 cars_dir: str | None = None,
+                 update_fn: Callable[[], dict | None] | None = None,
+                 export_fn: Callable[[], bytes] | None = None,
+                 import_fn: Callable[[bytes], bool] | None = None, **kwargs):
         self._snapshot_fn = snapshot_fn
         self._web_dir = web_dir
         self._lap_fn = lap_fn
         self._delete_fn = delete_fn
         self._cars_dir = cars_dir
+        self._update_fn = update_fn
+        self._export_fn = export_fn
+        self._import_fn = import_fn
         super().__init__(*args, **kwargs)
 
     def log_message(self, *args):  # still: keine Konsolen-Spam
@@ -58,9 +64,36 @@ class _Handler(BaseHTTPRequestHandler):
             else:
                 self._send_json(data)
             return
+        if path == "/api/update":
+            # On-Demand-Versionscheck (nur wenn das Dashboard ihn anfordert).
+            info = self._update_fn() if self._update_fn is not None else None
+            self._send_json(info or {})
+            return
+        if path == "/api/export" and self._export_fn is not None:
+            body = self._export_fn()
+            self.send_response(200)
+            self.send_header("Content-Type", "application/zip")
+            self.send_header("Content-Disposition",
+                             'attachment; filename="fh6laptracker-backup.zip"')
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            self.wfile.write(body)
+            return
         if path in ("/", ""):
             path = "/index.html"
         self._send_static(path)
+
+    def do_POST(self):
+        path = self.path.split("?", 1)[0]
+        if path == "/api/import" and self._import_fn is not None:
+            length = int(self.headers.get("Content-Length") or 0)
+            data = self.rfile.read(length) if length > 0 else b""
+            if self._import_fn(data):
+                self._send_json({"ok": True})
+            else:
+                self.send_error(400)
+            return
+        self.send_error(405)
 
     def do_DELETE(self):
         path = self.path.split("?", 1)[0]
@@ -118,10 +151,14 @@ def start_web_server(
     lap_fn: Callable[[str], dict | None] | None = None,
     delete_fn: Callable[[str], bool] | None = None,
     cars_dir: str | None = None,
+    update_fn: Callable[[], dict | None] | None = None,
+    export_fn: Callable[[], bytes] | None = None,
+    import_fn: Callable[[bytes], bool] | None = None,
 ) -> ThreadingHTTPServer:
     """Startet den Server in einem Daemon-Thread und gibt ihn zurueck."""
     handler = partial(_Handler, snapshot_fn=snapshot_fn, web_dir=web_dir,
-                      lap_fn=lap_fn, delete_fn=delete_fn, cars_dir=cars_dir)
+                      lap_fn=lap_fn, delete_fn=delete_fn, cars_dir=cars_dir,
+                      update_fn=update_fn, export_fn=export_fn, import_fn=import_fn)
     httpd = ThreadingHTTPServer((host, port), handler)
     threading.Thread(target=httpd.serve_forever, daemon=True).start()
     return httpd

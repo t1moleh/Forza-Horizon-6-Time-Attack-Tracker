@@ -13,6 +13,8 @@ from __future__ import annotations
 
 import argparse
 import csv
+import logging
+import logging.handlers
 import os
 import socket
 import sys
@@ -20,13 +22,16 @@ import threading
 import time
 from datetime import datetime
 
+from . import __version__
 from . import geometry as g
 from . import telemetry as tel
 from .analysis import analyze_lap
 from .circuits import Circuit, CircuitStore
 from .engine import LapEngine, LapEvent
 from .ghost import GhostComparer
+from . import backup
 from . import traces as tr
+from . import update_check
 from .session import SessionState
 from .snapshot import build_state
 from .storage import (NameStore, delete_lap, ensure_log, is_personal_best,
@@ -49,16 +54,62 @@ def bundle_dir() -> str:
 
 
 def user_data_dir() -> str:
-    """Ordner fuer SCHREIBBARE Nutzerdaten (lap_times, bestlaps, laps/, circuits).
-    Als .exe neben der .exe, sonst im Projekt."""
-    return os.path.dirname(sys.executable) if _frozen() else PROJECT_ROOT
+    """Fester, update-sicherer Ordner fuer SCHREIBBARE Nutzerdaten
+    (lap_times, bestlaps, laps/, circuits, car_names, car_meta).
+
+    Frozen (.exe): %APPDATA%\\FH6LapTracker - bleibt erhalten, egal wohin die
+    .exe verschoben oder ob sie ersetzt/aktualisiert wird (ueberlebt Updates).
+    Bewusst NICHT _MEIPASS (Temp-Ordner, wird beim Beenden geloescht).
+    Dev (Quelle): Projektordner."""
+    if not _frozen():
+        return PROJECT_ROOT
+    base = os.environ.get("APPDATA") or os.path.dirname(sys.executable)
+    d = os.path.join(base, "FH6LapTracker")
+    os.makedirs(d, exist_ok=True)
+    return d
+
+
+# Schreibbare Nutzerdaten, die ein Update ueberleben muessen.
+_USER_FILES = ("lap_times.csv", "bestlaps.csv", "circuits.csv",
+               "car_names.csv", "car_meta.csv")
+
+
+def migrate_legacy_data(data_dir: str) -> None:
+    """Einmalige Migration: fruehere Versionen legten die CSVs NEBEN die .exe.
+    Liegen dort Daten und im neuen %APPDATA%-Ordner noch keine lap_times.csv,
+    werden Zeiten/Strecken/Traces uebernommen - so gehen beim Umstieg auf die
+    update-sichere Ablage keine bestehenden Rundenzeiten verloren."""
+    if not _frozen():
+        return
+    legacy = os.path.dirname(sys.executable)
+    if os.path.abspath(legacy) == os.path.abspath(data_dir):
+        return
+    if os.path.exists(os.path.join(data_dir, "lap_times.csv")):
+        return  # schon migriert / bereits Daten vorhanden
+    if not os.path.exists(os.path.join(legacy, "lap_times.csv")):
+        return  # nichts Altes zu uebernehmen
+    import shutil
+    for name in _USER_FILES:
+        src, dst = os.path.join(legacy, name), os.path.join(data_dir, name)
+        if os.path.exists(src) and not os.path.exists(dst):
+            try:
+                shutil.copy2(src, dst)
+            except OSError:
+                pass
+    src_laps, dst_laps = os.path.join(legacy, "laps"), os.path.join(data_dir, "laps")
+    if os.path.isdir(src_laps) and not os.path.isdir(dst_laps):
+        try:
+            shutil.copytree(src_laps, dst_laps)
+        except OSError:
+            pass
+    print(f"  (Bestehende Daten aus '{legacy}' nach '{data_dir}' uebernommen.)")
 
 
 def seed_defaults(data_dir: str) -> None:
-    """Default-Dateien (car_names.csv, circuits.csv) beim ersten Start neben die
-    .exe kopieren, damit sie dort schreibbar vorliegen."""
+    """Default-Dateien (car_names.csv, circuits.csv, car_meta.csv) beim ersten
+    Start in den Nutzer-Datenordner kopieren, damit sie schreibbar vorliegen."""
     import shutil
-    for name in ("car_names.csv", "circuits.csv"):
+    for name in ("car_names.csv", "circuits.csv", "car_meta.csv"):
         dst = os.path.join(data_dir, name)
         src = os.path.join(bundle_dir(), name)
         if not os.path.exists(dst) and os.path.exists(src):
@@ -68,10 +119,59 @@ def seed_defaults(data_dir: str) -> None:
                 pass
 
 
+class _StreamToLog:
+    """Datei-artiges Objekt, das geschriebene Zeilen ins Logging schickt.
+    Ersetzt sys.stdout/stderr, wenn es (als --noconsole-.exe) keine Konsole gibt
+    - so landen bestehende print()-Ausgaben in der Logdatei statt zu crashen."""
+
+    def __init__(self, level: int):
+        self._level = level
+        self._buf = ""
+
+    def write(self, s):
+        self._buf += s
+        while "\n" in self._buf:
+            line, self._buf = self._buf.split("\n", 1)
+            if line.strip():
+                logging.log(self._level, line.rstrip())
+
+    def flush(self):
+        if self._buf.strip():
+            logging.log(self._level, self._buf.rstrip())
+        self._buf = ""
+
+
+def setup_file_logging(data_dir: str) -> str:
+    """Ausgaben in eine rotierende Logdatei im Nutzer-Datenordner schreiben.
+
+    Noetig fuer die --noconsole-.exe: ohne Konsole gibt es kein stdout, die
+    vielen print()-Aufrufe gingen ins Leere bzw. wuerden Fehler werfen. Stattdessen
+    wird hier alles geloggt (auch unbehandelte Ausnahmen) - gut fuer Bug-Reports."""
+    log_path = os.path.join(data_dir, "fh6laptracker.log")
+    try:
+        os.makedirs(data_dir, exist_ok=True)
+        handler = logging.handlers.RotatingFileHandler(
+            log_path, maxBytes=512 * 1024, backupCount=2, encoding="utf-8")
+        handler.setFormatter(logging.Formatter(
+            "%(asctime)s %(levelname)s %(message)s"))
+        root = logging.getLogger()
+        root.setLevel(logging.INFO)
+        root.addHandler(handler)
+    except OSError:
+        pass  # Logdatei nicht moeglich - trotzdem stdout/stderr umleiten (kein Crash)
+    sys.stdout = _StreamToLog(logging.INFO)
+    sys.stderr = _StreamToLog(logging.ERROR)
+    sys.excepthook = lambda et, e, tb: logging.error(
+        "Unbehandelte Ausnahme", exc_info=(et, e, tb))
+    logging.info("=== FH6 Lap Tracker %s gestartet ===", __version__)
+    return log_path
+
+
 def _paths(data_dir: str) -> dict[str, str]:
     return {
         "names": os.path.join(data_dir, "car_names.csv"),
         "circuits": os.path.join(data_dir, "circuits.csv"),
+        "car_meta": os.path.join(data_dir, "car_meta.csv"),
         "log": os.path.join(data_dir, "lap_times.csv"),
         "best": os.path.join(data_dir, "bestlaps.csv"),
         "traces": os.path.join(data_dir, "laps"),
@@ -182,9 +282,12 @@ def run_live(data_dir: str, host: str, port: int,
     if web:
         try:
             kw = {"web_dir": web_dir} if web_dir else {}
-            start_web_server(lambda: build_state(session, paths["log"], paths["traces"]),
+            start_web_server(lambda: build_state(session, paths["log"], paths["traces"], paths["car_meta"]),
                              port=web_port, lap_fn=lap_fn, delete_fn=delete_fn,
-                             cars_dir=os.path.join(data_dir, "cars"), **kw)
+                             cars_dir=os.path.join(data_dir, "cars"),
+                             update_fn=lambda: update_check.cached_latest(__version__),
+                             export_fn=lambda: backup.export_zip(data_dir),
+                             import_fn=lambda b: backup.import_zip(data_dir, b), **kw)
             web_url = f"http://127.0.0.1:{web_port}"
         except OSError as e:
             print(f"  (Web-Dashboard konnte nicht starten: {e})")
@@ -272,7 +375,7 @@ def run_live(data_dir: str, host: str, port: int,
         threading.Thread(target=udp_loop, daemon=True).start()
         try:
             import webview
-            webview.create_window("FH6 Time Attack Tracker", web_url,
+            webview.create_window(f"FH6 Lap Tracker v{__version__}", web_url,
                                   width=1280, height=820, min_size=(900, 600))
             webview.start()
         except Exception as e:
@@ -364,8 +467,10 @@ def main(argv: list[str] | None = None) -> None:
     args = ap.parse_args(argv)
 
     data_dir = args.data_dir or user_data_dir()
-    seed_defaults(data_dir)                         # Default-CSVs neben die .exe
-    web_dir = os.path.join(bundle_dir(), "web")     # mitgelieferte UI
+    if args.data_dir is None:
+        migrate_legacy_data(data_dir)               # Daten alter Versionen uebernehmen
+    seed_defaults(data_dir)                          # fehlende Default-CSVs ergaenzen
+    web_dir = os.path.join(bundle_dir(), "web")      # mitgelieferte UI
 
     if args.replay:
         run_replay(args.replay, data_dir, args.save_circuit)

@@ -36,3 +36,6 @@ cars.zip
 car_images_manifest.csv
 car_build*.log
 release_v*/
+
+# PyInstaller build log
+pyinstaller.log

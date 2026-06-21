@@ -10,8 +10,9 @@ each circuit's start/finish line and times every flying lap automatically — no
 learning lap, works across car changes.
 
 > **Read‑only.** The tool only *receives* the telemetry packets the game already
-> broadcasts to your own PC. It never reads or writes game memory and sends
-> nothing anywhere — anti‑cheat‑safe. Your data stays local.
+> broadcasts to your own PC. It never reads or writes game memory and sends no
+> game or personal data anywhere — anti‑cheat‑safe. Your data stays local. (The
+> only network request is a quick version check to GitHub on startup; see Privacy.)
 >
 > **Status: in active development** — feedback and feature wishes very welcome!
 
@@ -42,13 +43,16 @@ https://github.com/user-attachments/assets/76979345-0105-4dce-a057-70502e586234
 1. Download `FH6 Lap Tracker.exe` from the latest [release](https://github.com/t1moleh/Forza-Horizon-6-Time-Attack-Tracker/releases/latest).
 2. In Forza Horizon 6: **Settings → HUD → Data Out = ON**, IP `127.0.0.1`,
    Port `5300`.
-3. Double‑click the `.exe`. The dashboard opens in **its own app window** (a
-   small console window also stays open in the background while it runs).
+3. Double‑click the `.exe`. The dashboard opens in **its own app window** — no
+   console window.
 4. Drive a Time Attack circuit, times appear automatically. Close the window to
    stop.
 
-No Python needed. On first start the tool creates `circuits.csv`, `car_names.csv`
-and `lap_times.csv` next to the `.exe`.
+No Python needed. Your lap times and settings are stored in
+`%APPDATA%\FH6LapTracker` (alongside a `fh6laptracker.log` for troubleshooting),
+so they **survive updates** — you can replace or move
+the `.exe` and all your recorded times stay intact. (Data from older versions
+that kept files next to the `.exe` is migrated there automatically on first run.)
 
 ## Features
 
@@ -104,8 +108,15 @@ Detecting and invalidating such laps automatically is planned for a later update
 ## Privacy & fair play
 
 The tool binds a local UDP socket and reads the "Data Out" packets the game sends
-to `127.0.0.1`. It does not read or modify game memory and sends nothing anywhere.
-Your data stays on your PC.
+to `127.0.0.1`. It does not read or modify game memory, and it never sends your
+lap times, telemetry or any personal data anywhere — that all stays on your PC.
+
+The one exception is a **version check**: on startup the tool makes a single
+read-only request to the public GitHub releases API to see whether a newer
+version exists, and shows a small banner with a download link if so. It sends no
+data of yours (just a normal HTTPS request, like opening a web page), uses no
+account or API key, never auto-downloads anything, and silently does nothing if
+you are offline.
 
 ## Feedback & bugs
 
@@ -131,8 +142,9 @@ py -m fh6tracker.tracker           # run live + dashboard
 py -m fh6tracker.recorder          # record a calibration trace
 cp -r cars/* web/cars/             # bundle car images into the build (web/cars)
 py -m PyInstaller --onefile --noconfirm --clean --name "FH6 Lap Tracker" \
-  --icon "icon.ico" --collect-all webview \
+  --icon "icon.ico" --noconsole --collect-all webview \
   --add-data "web;web" --add-data "car_names.csv;." --add-data "circuits.csv;." \
+  --add-data "car_meta.csv;." \
   fh6_tracker_app.py               # build the .exe (Windows)
 ```
 

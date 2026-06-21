@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fh6-lap-tracker"
-version = "0.2.0"
+version = "0.2.1"
 description = "Open-World Time-Attack Rundenzeiten-Tracker fuer Forza Horizon 6 (read-only Data Out)"
 readme = "README.md"
 requires-python = ">=3.10"

@@ -9,9 +9,46 @@ from __future__ import annotations
 
 import csv
 import os
+import re
 
 from .session import SessionState
 from .util import fmt_time
+
+# Fahrzeug-Metadaten (Typ/Division + Land je Auto, Quelle forza.net/fh6cars).
+# Cache nach (Pfad, mtime), damit manuelles Nachpflegen ohne Neustart greift.
+_meta_cache: dict[str, tuple[float, dict]] = {}
+
+
+def load_car_meta(path: str | None) -> dict[int, dict]:
+    """car_meta.csv -> {ordinal: {"type":..., "country":...}}. Leer bei Fehlen."""
+    if not path or not os.path.exists(path):
+        return {}
+    try:
+        mtime = os.path.getmtime(path)
+    except OSError:
+        return {}
+    hit = _meta_cache.get(path)
+    if hit and hit[0] == mtime:
+        return hit[1]
+    meta: dict[int, dict] = {}
+    try:
+        with open(path, newline="", encoding="utf-8") as fh:
+            for r in csv.DictReader(fh):
+                o = (r.get("car_ordinal") or "").strip()
+                if o.lstrip("-").isdigit():
+                    meta[int(o)] = {
+                        "type": (r.get("type") or "").strip(),
+                        "country": (r.get("country") or "").strip(),
+                    }
+    except OSError:
+        return {}
+    _meta_cache[path] = (mtime, meta)
+    return meta
+
+
+def _year_of(name: str) -> str:
+    m = re.match(r"\s*(\d{4})", name or "")
+    return m.group(1) if m else ""
 
 
 def _read_laps(log_path: str) -> list[dict]:
@@ -28,8 +65,13 @@ def _read_laps(log_path: str) -> list[dict]:
     return rows
 
 
-def build_overall(log_path: str) -> list[dict]:
-    """Beste Zeit je (Strecke, Auto), sortiert nach Strecke dann Zeit."""
+def build_overall(log_path: str, meta: dict[int, dict] | None = None) -> list[dict]:
+    """Beste Zeit je (Strecke, Auto), sortiert nach Strecke dann Zeit.
+
+    meta (optional): {ordinal: {type, country}} aus car_meta.csv - haengt
+    Fahrzeugtyp/Land je Eintrag an (fuer die Filter im Overall-Tab).
+    """
+    meta = meta or {}
     best: dict[tuple[str, str], dict] = {}
     for r in _read_laps(log_path):
         key = (r["strecke"], r["auto"])
@@ -37,11 +79,16 @@ def build_overall(log_path: str) -> list[dict]:
             best[key] = r
     out = []
     for (track, car), r in best.items():
+        ordn = (r.get("car_ordinal") or "").strip()
+        m = meta.get(int(ordn)) if ordn.lstrip("-").isdigit() else None
         out.append({
             "track": track, "car_name": car, "class": r["klasse"],
             "pi": int(r["pi"]) if r["pi"].isdigit() else r["pi"],
             "drivetrain": r["antrieb"],
             "time": fmt_time(r["_sec"]), "time_seconds": round(r["_sec"], 3),
+            "year": _year_of(car),
+            "type": (m or {}).get("type", ""),
+            "country": (m or {}).get("country", ""),
         })
     out.sort(key=lambda e: (e["track"], e["time_seconds"]))
     # Rang je Strecke
@@ -90,13 +137,15 @@ def build_by_car(log_path: str, traces_dir: str | None = None) -> list[dict]:
 
 
 def build_state(session: SessionState, log_path: str,
-                traces_dir: str | None = None) -> dict:
+                traces_dir: str | None = None,
+                meta_path: str | None = None) -> dict:
     sess = session.snapshot()
+    meta = load_car_meta(meta_path)
     state = {
         "connected": session.connected,
         "in_world": session.in_world,
         "session": sess,  # verschachtelt (interne Nutzung/Tests)
-        "overall": build_overall(log_path),
+        "overall": build_overall(log_path, meta),
         "by_car": build_by_car(log_path, traces_dir),
     }
     # Session-Felder zusaetzlich flach auf oberster Ebene: die in Claude Design

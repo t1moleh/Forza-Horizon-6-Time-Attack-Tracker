@@ -44,9 +44,10 @@ working when you swap cars.
 3. Run the .exe, drive a Time Attack circuit, watch the times. That is it.
 
 **Safe?** Yes, read-only. It only listens to the telemetry the game already
-sends to your own PC, never touches game memory, sends nothing anywhere. Windows
-may warn about an unknown publisher (normal for small tools); full source is on
-GitHub.
+sends to your own PC and never touches game memory. It sends none of your data
+anywhere — the only network request is a quick version check to GitHub on startup
+(so it can tell you when an update is out). Windows may warn about an unknown
+publisher (normal for small tools); full source is on GitHub.
 
 This is still early development and I am actively building it, so I would really
 love your input:
