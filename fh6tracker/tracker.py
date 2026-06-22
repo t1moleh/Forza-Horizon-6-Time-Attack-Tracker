@@ -286,7 +286,7 @@ def run_live(data_dir: str, host: str, port: int,
                              port=web_port, lap_fn=lap_fn, delete_fn=delete_fn,
                              cars_dir=os.path.join(data_dir, "cars"),
                              update_fn=lambda: update_check.cached_latest(__version__),
-                             export_fn=lambda: backup.export_zip(data_dir),
+                             export_fn=lambda: backup.save_export(data_dir),
                              import_fn=lambda b: backup.import_zip(data_dir, b), **kw)
             web_url = f"http://127.0.0.1:{web_port}"
         except OSError as e:
@@ -377,7 +377,10 @@ def run_live(data_dir: str, host: str, port: int,
             import webview
             webview.create_window(f"FH6 Lap Tracker v{__version__}", web_url,
                                   width=1280, height=820, min_size=(900, 600))
-            webview.start()
+            # private_mode=False + fester storage_path: localStorage (Sprache,
+            # Theme, Accent, Sound, eigene Bilder) bleibt ueber Neustarts erhalten.
+            webview.start(private_mode=False,
+                          storage_path=os.path.join(data_dir, "webview"))
         except Exception as e:
             print(f"  (Eigenes Fenster nicht moeglich: {e}; oeffne Browser)")
             _open_browser(web_url)

@@ -24,6 +24,18 @@ def test_export_contains_data_and_traces(tmp_path):
     assert "laps/x1.json" in names
 
 
+def test_save_export_writes_zip_and_returns_path(tmp_path):
+    src = tmp_path / "src"
+    src.mkdir()
+    _make_data(src)
+    out = tmp_path / "out"
+    path = backup.save_export(str(src), out_dir=str(out))
+    assert os.path.isfile(path)
+    assert path.endswith(".zip") and "fh6laptracker-backup-" in os.path.basename(path)
+    with zipfile.ZipFile(path) as z:
+        assert "lap_times.csv" in z.namelist()
+
+
 def test_export_import_roundtrip(tmp_path):
     src = tmp_path / "src"
     src.mkdir()

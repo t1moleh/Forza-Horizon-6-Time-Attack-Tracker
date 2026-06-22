@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import io
 import os
+import time
 import zipfile
 
 _FILES = ("lap_times.csv", "bestlaps.csv", "circuits.csv",
@@ -31,6 +32,26 @@ def export_zip(data_dir: str) -> bytes:
                 if os.path.isfile(fp) and fn.endswith(".json"):
                     z.write(fp, f"{_LAPS}/{fn}")
     return buf.getvalue()
+
+
+def save_export(data_dir: str, out_dir: str | None = None) -> str:
+    """Schreibt das Backup-ZIP in einen gut auffindbaren Ordner (Downloads,
+    sonst Desktop, sonst Home) und gibt den vollen Pfad zurueck. Robuster als ein
+    Browser-Download: WebView2 reicht Downloads im App-Fenster nicht immer durch."""
+    if out_dir is None:
+        home = os.path.expanduser("~")
+        out_dir = home
+        for cand in ("Downloads", "Desktop"):
+            p = os.path.join(home, cand)
+            if os.path.isdir(p):
+                out_dir = p
+                break
+    os.makedirs(out_dir, exist_ok=True)
+    fname = "fh6laptracker-backup-" + time.strftime("%Y%m%d-%H%M%S") + ".zip"
+    path = os.path.join(out_dir, fname)
+    with open(path, "wb") as f:
+        f.write(export_zip(data_dir))
+    return path
 
 
 def import_zip(data_dir: str, data: bytes) -> bool:

@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', async function() {
           '<span id="fh6-bmsg" style="font-size:13px;color:var(--txt2)"></span>'+
         '</div>';
       host.appendChild(card);
-      document.getElementById("fh6-exp").addEventListener("click",function(){ try{ window.location.href="/api/export"; }catch(e){} });
+      document.getElementById("fh6-exp").addEventListener("click",function(){ var m=document.getElementById("fh6-bmsg"); m.textContent=g?"Exportiere...":"Exporting..."; fetch("/api/export").then(function(r){return r.json();}).then(function(d){ m.textContent=(g?"Gespeichert: ":"Saved to: ")+((d&&d.path)?d.path:"?"); }).catch(function(){ m.textContent=g?"Export fehlgeschlagen.":"Export failed."; }); });
       var f=document.getElementById("fh6-impf");
       document.getElementById("fh6-imp").addEventListener("click",function(){ f.click(); });
       f.addEventListener("change",function(){

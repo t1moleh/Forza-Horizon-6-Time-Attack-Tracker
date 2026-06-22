@@ -36,7 +36,7 @@ class _Handler(BaseHTTPRequestHandler):
                  delete_fn: Callable[[str], bool] | None = None,
                  cars_dir: str | None = None,
                  update_fn: Callable[[], dict | None] | None = None,
-                 export_fn: Callable[[], bytes] | None = None,
+                 export_fn: Callable[[], str] | None = None,
                  import_fn: Callable[[bytes], bool] | None = None, **kwargs):
         self._snapshot_fn = snapshot_fn
         self._web_dir = web_dir
@@ -70,14 +70,13 @@ class _Handler(BaseHTTPRequestHandler):
             self._send_json(info or {})
             return
         if path == "/api/export" and self._export_fn is not None:
-            body = self._export_fn()
-            self.send_response(200)
-            self.send_header("Content-Type", "application/zip")
-            self.send_header("Content-Disposition",
-                             'attachment; filename="fh6laptracker-backup.zip"')
-            self.send_header("Content-Length", str(len(body)))
-            self.end_headers()
-            self.wfile.write(body)
+            # Serverseitig speichern (robuster als Browser-Download in WebView2)
+            # und den Zielpfad zurueckgeben.
+            try:
+                saved = self._export_fn()
+                self._send_json({"path": saved})
+            except OSError:
+                self.send_error(500)
             return
         if path in ("/", ""):
             path = "/index.html"
@@ -152,7 +151,7 @@ def start_web_server(
     delete_fn: Callable[[str], bool] | None = None,
     cars_dir: str | None = None,
     update_fn: Callable[[], dict | None] | None = None,
-    export_fn: Callable[[], bytes] | None = None,
+    export_fn: Callable[[], str] | None = None,
     import_fn: Callable[[bytes], bool] | None = None,
 ) -> ThreadingHTTPServer:
     """Startet den Server in einem Daemon-Thread und gibt ihn zurueck."""
