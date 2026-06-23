@@ -30,8 +30,10 @@ from .circuits import Circuit, CircuitStore
 from .engine import LapEngine, LapEvent
 from .ghost import GhostComparer
 from . import backup
+from . import races as rc
 from . import traces as tr
 from . import update_check
+from .rivals import RivalsTracker, is_rivals
 from .session import SessionState
 from .snapshot import build_state
 from .storage import (NameStore, delete_lap, ensure_log, is_personal_best,
@@ -262,6 +264,8 @@ def run_live(data_dir: str, host: str, port: int,
     engine, names, store, paths = _make_engine(data_dir, save_new_circuits=True)
     session = SessionState()
     ghost = GhostComparer()
+    rivals = RivalsTracker()                                   # Rivals: Spiel-Timer
+    race_list = rc.load_races(os.path.join(bundle_dir(), "races.csv"))  # Strecken-Namen
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -324,9 +328,13 @@ def run_live(data_dir: str, host: str, port: int,
                 continue
             t = time.perf_counter()
             telem = tel.parse_telemetry(data)
+            lt = tel.parse_lap_timing(data)          # spielinterne Lap-Timer
             session.note_packet(pkt, names.display)
             session.note_telemetry(telem)
             ev = engine.update(t, pkt)
+            riv_ev = rivals.update(lt)               # fertige Rivals-Runde?
+            if is_rivals(lt):
+                ev = None    # im Rivals-Modus NICHT die GPS-Runde loggen (Spiel-Timer gilt)
             # Live-Delta zur Ghost-Referenz (laufende Runde vs. Bestzeit)
             live_delta = None
             if (engine.circuit_name and engine.lap_start_t is not None
@@ -354,6 +362,19 @@ def run_live(data_dir: str, host: str, port: int,
                 if not ev.approximate:
                     ghost.consider(ev.car.ordinal, ev.circuit, ev.lap_time, ev.profile)
                 _handle_event(ev, names, paths, is_best=is_best, lap_id=lap_id)
+
+            if riv_ev is not None:
+                # Rivals-Runde aus dem Spiel-Timer: Strecke ueber die Position
+                # erkennen (labs.gg-Registry), Zeit kommt aus dem Spiel.
+                near = rc.nearest_race(race_list, pkt.x, pkt.z)
+                track_name = near.name if near else (engine.circuit_name or "Rivals")
+                car_name = names.display(pkt.ordinal)
+                lap_id = datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3] + f"_{pkt.ordinal}"
+                riv_lap = LapEvent(riv_ev.lap_time, t, track_name, pkt, approximate=False)
+                log_lap(paths["log"], riv_lap, car_name, lap_id, modus="rivals")
+                rebuild_bestlaps(paths["log"], paths["best"])
+                print(f"\n  >> Rivals-Runde: {fmt_time(riv_ev.lap_time):>9}  |  "
+                      f"{car_name}  |  {track_name}")
 
             # Spur der (neuen) laufenden Runde puffern
             if not pkt.race_on or engine.lap_start_t is None:

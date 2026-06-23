@@ -72,13 +72,14 @@ def build_overall(log_path: str, meta: dict[int, dict] | None = None) -> list[di
     Fahrzeugtyp/Land je Eintrag an (fuer die Filter im Overall-Tab).
     """
     meta = meta or {}
-    best: dict[tuple[str, str], dict] = {}
+    best: dict[tuple[str, str, str], dict] = {}
     for r in _read_laps(log_path):
-        key = (r["strecke"], r["auto"])
+        modus = r.get("modus") or "timeattack"
+        key = (r["strecke"], r["auto"], modus)
         if key not in best or r["_sec"] < best[key]["_sec"]:
             best[key] = r
     out = []
-    for (track, car), r in best.items():
+    for (track, car, modus), r in best.items():
         ordn = (r.get("car_ordinal") or "").strip()
         m = meta.get(int(ordn)) if ordn.lstrip("-").isdigit() else None
         out.append({
@@ -89,13 +90,15 @@ def build_overall(log_path: str, meta: dict[int, dict] | None = None) -> list[di
             "year": _year_of(car),
             "type": (m or {}).get("type", ""),
             "country": (m or {}).get("country", ""),
+            "modus": modus,
         })
     out.sort(key=lambda e: (e["track"], e["time_seconds"]))
-    # Rang je Strecke
-    rank: dict[str, int] = {}
+    # Rang je (Strecke, Modus) - Time Attack und Rivals getrennt
+    rank: dict[tuple[str, str], int] = {}
     for e in out:
-        rank[e["track"]] = rank.get(e["track"], 0) + 1
-        e["rank"] = rank[e["track"]]
+        k = (e["track"], e["modus"])
+        rank[k] = rank.get(k, 0) + 1
+        e["rank"] = rank[k]
     return out
 
 
@@ -108,12 +111,13 @@ def build_by_car(log_path: str, traces_dir: str | None = None) -> list[dict]:
     """
     cars: dict[tuple, dict] = {}
     for r in _read_laps(log_path):
-        key = (r["auto"], r["klasse"], r["pi"])
+        modus = r.get("modus") or "timeattack"
+        key = (r["auto"], r["klasse"], r["pi"], modus)
         entry = cars.setdefault(key, {
             "ordinal": int(r["car_ordinal"]) if r["car_ordinal"].lstrip("-").isdigit() else None,
             "name": r["auto"], "class": r["klasse"],
             "pi": int(r["pi"]) if r["pi"].isdigit() else r["pi"],
-            "drivetrain": r["antrieb"], "laps": [],
+            "drivetrain": r["antrieb"], "modus": modus, "laps": [],
         })
         lap_id = r.get("lap_id", "")
         if traces_dir is not None:

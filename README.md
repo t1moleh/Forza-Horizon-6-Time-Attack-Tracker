@@ -159,7 +159,7 @@ cp -r cars/* web/cars/             # bundle car images into the build (web/cars)
 py -m PyInstaller --onefile --noconfirm --clean --name "FH6 Lap Tracker" \
   --icon "icon.ico" --noconsole --collect-all webview \
   --add-data "web;web" --add-data "car_names.csv;." --add-data "circuits.csv;." \
-  --add-data "car_meta.csv;." \
+  --add-data "car_meta.csv;." --add-data "races.csv;." \
   fh6_tracker_app.py               # build the .exe (Windows)
 ```
 

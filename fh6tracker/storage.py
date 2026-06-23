@@ -14,7 +14,7 @@ from .util import fmt_time
 
 LOG_HEADER = [
     "datum_uhrzeit", "auto", "car_ordinal", "klasse", "pi", "antrieb",
-    "rundenzeit_s", "rundenzeit", "strecke", "hinweis", "lap_id",
+    "rundenzeit_s", "rundenzeit", "strecke", "hinweis", "lap_id", "modus",
 ]
 BEST_HEADER = [
     "strecke", "auto", "klasse", "pi", "antrieb", "beste_rundenzeit", "rundenzeit_s",
@@ -51,6 +51,31 @@ def ensure_log(path: str) -> None:
         return
     _migrate_log(path)
     _ensure_lap_ids(path)
+    _ensure_modus(path)
+
+
+def _ensure_modus(path: str) -> None:
+    """Ergaenzt die modus-Spalte (timeattack/rivals). Bestehende Runden ohne
+    Wert gelten als 'timeattack' (Open-World-Time-Attack)."""
+    with open(path, newline="", encoding="utf-8") as fh:
+        rows = list(csv.reader(fh))
+    if not rows:
+        return
+    changed = False
+    if "modus" not in rows[0]:
+        rows[0].append("modus")
+        changed = True
+    idx = rows[0].index("modus")
+    for r in rows[1:]:
+        while len(r) <= idx:
+            r.append("")
+            changed = True
+        if not r[idx]:
+            r[idx] = "timeattack"
+            changed = True
+    if changed:
+        with open(path, "w", newline="", encoding="utf-8") as fh:
+            csv.writer(fh).writerows(rows)
 
 
 def _ensure_lap_ids(path: str) -> None:
@@ -150,16 +175,21 @@ def _migrate_log(path: str) -> None:
         csv.writer(fh).writerows(fixed)
 
 
-def log_lap(path: str, ev: LapEvent, auto: str, lap_id: str = "") -> None:
+def log_lap(path: str, ev: LapEvent, auto: str, lap_id: str = "",
+            modus: str = "timeattack") -> None:
     pkt = ev.car
     stamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    hinweis = "Tool-Stoppuhr (Time Attack)"
-    if ev.approximate:
-        hinweis += " - erste Runde (Schaetzung)"
+    if modus == "rivals":
+        hinweis = "Spiel-Timer (Rivals)"
+    else:
+        hinweis = "Tool-Stoppuhr (Time Attack)"
+        if ev.approximate:
+            hinweis += " - erste Runde (Schaetzung)"
     with open(path, "a", newline="", encoding="utf-8") as fh:
         csv.writer(fh).writerow([
             stamp, auto, pkt.ordinal, pkt.class_name, pkt.pi, pkt.drivetrain_name,
             f"{ev.lap_time:.3f}", fmt_time(ev.lap_time), ev.circuit, hinweis, lap_id,
+            modus,
         ])
 
 
