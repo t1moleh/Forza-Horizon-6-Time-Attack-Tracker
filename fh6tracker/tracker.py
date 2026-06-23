@@ -333,7 +333,9 @@ def run_live(data_dir: str, host: str, port: int,
             session.note_telemetry(telem)
             ev = engine.update(t, pkt)
             riv_ev = rivals.update(lt)               # fertige Rivals-Runde?
-            if is_rivals(lt):
+            rivals_mode = is_rivals(lt)
+            session.note_mode("rivals" if rivals_mode else "timeattack")
+            if rivals_mode:
                 ev = None    # im Rivals-Modus NICHT die GPS-Runde loggen (Spiel-Timer gilt)
             # Live-Delta zur Ghost-Referenz (laufende Runde vs. Bestzeit)
             live_delta = None

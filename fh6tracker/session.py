@@ -56,6 +56,7 @@ class SessionState:
         self._lap_start_perf: float | None = None
         self._live_delta: float | None = None   # Live-Delta zur Bestzeit (Ghost)
         self._telemetry: dict | None = None      # letzte Live-Telemetrie
+        self._mode = "timeattack"                 # aktueller Live-Modus
 
         self.laps: list[SessionLap] = []
         self._cars: dict[int, CarInfo] = {}
@@ -75,6 +76,10 @@ class SessionState:
     def note_telemetry(self, telem: dict | None) -> None:
         with self._lock:
             self._telemetry = telem
+
+    def note_mode(self, mode: str) -> None:
+        with self._lock:
+            self._mode = mode
 
     def note_engine(self, circuit_name: str | None, lap_start_perf: float | None,
                     live_delta: float | None = None) -> None:
@@ -149,6 +154,7 @@ class SessionState:
                 "cars_used": cars_used,
                 "lap_count": len(valid),
                 "telemetry": self._telemetry if self.in_world else None,
+                "mode": self._mode,
             }
 
     @staticmethod
