@@ -21,7 +21,7 @@ DASH_PACKET_LEN = 324
 # Feste Offsets (ab Paketanfang), FH4/5/6 "Dash".
 OFF_RACE_ON = 0          # s32: 1 = in der Welt aktiv, 0 = Menue/Pause
 OFF_ORDINAL = 212        # s32: CarOrdinal
-OFF_CLASS = 216          # s32: 0=D 1=C 2=B 3=A 4=S1 5=S2 6=X
+OFF_CLASS = 216          # s32: 0=D 1=C 2=B 3=A 4=S1 5=S2 6=R 7=X (FH6: R unter X)
 OFF_PI = 220             # s32: CarPerformanceIndex
 OFF_DRIVETRAIN = 224     # s32: 0=FWD 1=RWD 2=AWD
 
@@ -32,6 +32,7 @@ OFF_CURRENT_RPM = 16
 OFF_ACCEL_X = 20         # g, quer (lateral)
 OFF_ACCEL_Y = 24         # g, vertikal
 OFF_ACCEL_Z = 28         # g, laengs (Beschl./Bremsen)
+OFF_ANG_VEL_Y = 48       # rad/s, Gierrate (Rotation -> Uebersteuern)
 OFF_YAW = 56
 OFF_PITCH = 60
 OFF_ROLL = 64
@@ -60,7 +61,7 @@ OFF_HANDBRAKE = _DASH + 74  # 318 u8
 OFF_GEAR = _DASH + 75       # 319 u8
 OFF_STEER = _DASH + 76      # 320 s8 (-127..127)
 
-CLASS_NAMES = {0: "D", 1: "C", 2: "B", 3: "A", 4: "S1", 5: "S2", 6: "X", 7: "X"}
+CLASS_NAMES = {0: "D", 1: "C", 2: "B", 3: "A", 4: "S1", 5: "S2", 6: "R", 7: "X"}
 DRIVETRAIN_NAMES = {0: "FWD", 1: "RWD", 2: "AWD"}
 
 _S32 = struct.Struct("<i")
@@ -151,6 +152,8 @@ def parse_telemetry(data: bytes) -> dict | None:
         "steer": round(_s8(data, OFF_STEER) / 127 * 100),
         "accel_lat_g": round(_f32(data, OFF_ACCEL_X) / 9.80665, 2),
         "accel_long_g": round(_f32(data, OFF_ACCEL_Z) / 9.80665, 2),
+        "accel_vert_g": round(_f32(data, OFF_ACCEL_Y) / 9.80665, 2),
+        "yaw_rate": round(_f32(data, OFF_ANG_VEL_Y), 3),
         "power_kw": round(_f32(data, OFF_POWER) / 1000, 1),
         "torque_nm": round(_f32(data, OFF_TORQUE)),
         "boost": round(_f32(data, OFF_BOOST), 2),
@@ -158,6 +161,10 @@ def parse_telemetry(data: bytes) -> dict | None:
         "tire_temp": _wheels(data, OFF_TIRE_TEMP),
         "tire_slip": _wheels(data, OFF_COMBINED_SLIP),
         "susp_travel": _wheels(data, OFF_SUSP_NORM),
+        # Fuer den Tuning-Assistenten: Slip-Ratio (laengs: Durchdrehen/Blockieren)
+        # und Slip-Winkel (quer: Unter-/Uebersteuern, Setup-Balance) je Rad.
+        "slip_ratio": _wheels(data, OFF_SLIP_RATIO),
+        "slip_angle": _wheels(data, OFF_SLIP_ANGLE),
     }
 
 

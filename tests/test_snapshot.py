@@ -113,6 +113,25 @@ def test_session_snapshot_tracks_laps_and_best():
     assert snap["cars_used"][0]["car_name"] == "Ferrari 355"
 
 
+def test_class_names_fh6_r_and_x():
+    # FH6: CarClass 6 = R (unter X), 7 = X. Frueher beide faelschlich X.
+    assert Packet(1, 100, 6, 924, 1, 0.0, 0.0).class_name == "R"
+    assert Packet(1, 100, 7, 999, 1, 0.0, 0.0).class_name == "X"
+    assert Packet(1, 100, 5, 886, 1, 0.0, 0.0).class_name == "S2"
+
+
+def test_cars_used_excludes_cars_without_laps():
+    sess = SessionState()
+    a = Packet(1, 253, 3, 700, 1, 0.0, 0.0)        # Auto A: faehrt eine Runde
+    sess.note_packet(a, lambda o: "Ferrari")
+    sess.add_lap(LapEvent(92.0, 100.0, "T", a, approximate=False), "Ferrari")
+    b = Packet(1, 999, 5, 886, 1, 0.0, 0.0)        # Auto B: nur reingespawnt
+    sess.note_packet(b, lambda o: "Audi")          # keine Runde
+    names = [c["car_name"] for c in sess.snapshot()["cars_used"]]
+    assert "Ferrari" in names
+    assert "Audi" not in names                     # ohne gueltige Runde -> nicht gelistet
+
+
 def test_approximate_laps_excluded_from_best():
     sess = SessionState()
     pkt = Packet(1, 253, 3, 700, 1, 0.0, 0.0)

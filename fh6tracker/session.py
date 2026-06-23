@@ -123,6 +123,8 @@ class SessionState:
             cars_used = []
             for ordn, car in self._cars.items():
                 car_laps = [lp for lp in valid if lp.car_ordinal == ordn]
+                if not car_laps:
+                    continue  # nur Autos mit mind. einer gueltigen Runde zeigen
                 cars_used.append({
                     "ordinal": ordn,
                     "car_name": car.name,

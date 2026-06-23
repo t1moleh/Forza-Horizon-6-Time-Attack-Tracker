@@ -54,6 +54,21 @@ so they **survive updates** — you can replace or move
 the `.exe` and all your recorded times stay intact. (Data from older versions
 that kept files next to the `.exe` is migrated there automatically on first run.)
 
+### A Windows warning may pop up — that's normal
+
+Because this is a small free tool, the `.exe` isn't code‑signed (a certificate is
+a paid, ongoing cost), so Windows may warn you the first time you run it:
+
+- **SmartScreen** ("Windows protected your PC" / *unknown publisher*) — click
+  **More info → Run anyway**.
+- **Smart App Control** (a stricter Windows 11 feature that is off for most
+  people) may block it outright. If you have it on, you can build the `.exe`
+  yourself from the source, or run it on a machine without Smart App Control.
+
+**Nothing to worry about:** the tool is **read‑only** (it only listens to the
+telemetry your game already sends to your own PC) and the **full source code is
+on GitHub**, so you can check exactly what it does or compile it yourself.
+
 ## Features
 
 - **Automatic lap timing** on Time Attack circuits — flying laps, precise
