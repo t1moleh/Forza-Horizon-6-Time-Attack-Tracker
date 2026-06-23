@@ -53,6 +53,14 @@ OFF_TIRE_TEMP = _DASH + 24   # 268 FL,FR,RL,RR je +4
 OFF_BOOST = _DASH + 40   # 284 f32
 OFF_FUEL = _DASH + 44    # 288 f32 (0..1)
 OFF_DIST = _DASH + 48    # 292 f32 (m)
+# Spielinterne Lap-Timer (im Open-World-Time-Attack = 0, in Rivals vermutlich
+# befuellt -> Rivals-Probe prueft das):
+OFF_BEST_LAP = _DASH + 52       # 296 f32 (s)
+OFF_LAST_LAP = _DASH + 56       # 300 f32 (s)
+OFF_CUR_LAP = _DASH + 60        # 304 f32 (s)
+OFF_CUR_RACE_TIME = _DASH + 64  # 308 f32 (s)
+OFF_LAP_NUMBER = _DASH + 68     # 312 u16
+OFF_RACE_POS = _DASH + 70       # 314 u8
 # Eingaben (u8/s8) am Paketende
 OFF_THROTTLE = _DASH + 71   # 315 u8 (0..255)
 OFF_BRAKE = _DASH + 72      # 316 u8
@@ -66,6 +74,11 @@ DRIVETRAIN_NAMES = {0: "FWD", 1: "RWD", 2: "AWD"}
 
 _S32 = struct.Struct("<i")
 _F32 = struct.Struct("<f")
+_U16 = struct.Struct("<H")
+
+
+def _u16(data: bytes, off: int) -> int:
+    return _U16.unpack_from(data, off)[0]
 
 
 def _s32(data: bytes, off: int) -> int:
@@ -165,6 +178,24 @@ def parse_telemetry(data: bytes) -> dict | None:
         # und Slip-Winkel (quer: Unter-/Uebersteuern, Setup-Balance) je Rad.
         "slip_ratio": _wheels(data, OFF_SLIP_RATIO),
         "slip_angle": _wheels(data, OFF_SLIP_ANGLE),
+    }
+
+
+def parse_lap_timing(data: bytes) -> dict | None:
+    """Spielinterne Lap-Timer-Felder (fuer den Rivals-Modus). Im Open-World-
+    Time-Attack sind diese 0 (deshalb die GPS-Stoppuhr); in Rivals vermutlich
+    befuellt -> die Rivals-Probe prueft genau das."""
+    if len(data) < DASH_PACKET_LEN - 1:
+        return None
+    return {
+        "race_on": _s32(data, OFF_RACE_ON),
+        "lap_number": _u16(data, OFF_LAP_NUMBER),
+        "race_position": _u8(data, OFF_RACE_POS),
+        "current_lap": round(_f32(data, OFF_CUR_LAP), 3),
+        "last_lap": round(_f32(data, OFF_LAST_LAP), 3),
+        "best_lap": round(_f32(data, OFF_BEST_LAP), 3),
+        "current_race_time": round(_f32(data, OFF_CUR_RACE_TIME), 3),
+        "distance": round(_f32(data, OFF_DIST), 1),
     }
 
 
