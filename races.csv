@@ -1,0 +1,206 @@
+slug,name,category,type,x,y,z
+car-meet-car-meet-2026-05-13-09-37-03-20260513093703108910,Car Meet 2026-05-13 09:37:03,in_world_events,car_meet,-1992.1,389.3,-853.8
+car-meet-car-meet-2026-05-13-09-52-10-20260513095210107852,Car Meet 2026-05-13 09:52:10,in_world_events,car_meet,1088.1,447.4,6264.7
+car-meet-car-meet-2026-05-13-09-52-57-20260513095257545074,Car Meet 2026-05-13 09:52:57,in_world_events,car_meet,-409.4,102.4,-6540.1
+drag-meetup-festival-kilometer-drag-meetup-20260513101021553562,Festival Kilometer Drag Meetup,in_world_events,drag_meetup,-1888.7,392.4,-172.1
+drag-meetup-irokawa-quarter-mile-drag-meetup-20260513101104340966,Irokawa Quarter Mile Drag Meetup,in_world_events,drag_meetup,-1033.8,118.2,-8708.4
+drag-meetup-ito-half-mile-drag-meetup-20260513100957934198,Ito Half Mile Drag Meetup,in_world_events,drag_meetup,2936.7,118.6,-692.3
+time-attack-track-hokubu-time-attack-track-20260513101705514113,Hokubu Time Attack Track,in_world_events,time_attack,2827.6,124.7,2696.1
+time-attack-track-legend-island-time-attack-track-20260513101620088170,Legend Island Time Attack Track,in_world_events,time_attack,4268.9,162.1,-5280.5
+time-attack-track-sekibe-time-attack-track-20260513101529536886,Sekibe Time Attack Track,in_world_events,time_attack,2495.2,208.0,-5057.2
+time-attack-track-soni-time-attack-track-20260513101734923276,Soni Time Attack Track,in_world_events,time_attack,2780.8,461.1,4989.1
+danger-sign-airfield-takeoff-20260528134209937432,Airfield Takeoff,pr_stunts,danger_sign,3072.7,185.7,-312.3
+danger-sign-alpine-heights-20260528133729800526,Alpine Heights,pr_stunts,danger_sign,880.3,1030.9,8463.0
+danger-sign-azure-dive-20260528134005451683,Azure Dive,pr_stunts,danger_sign,4968.3,103.9,2692.4
+danger-sign-circuit-leap-20260528133915804298,Circuit Leap,pr_stunts,danger_sign,1983.4,236.2,3114.9
+danger-sign-clifftop-crest-20260528133703121038,Clifftop Crest,pr_stunts,danger_sign,491.8,470.5,6382.7
+danger-sign-farmland-falls-20260528133823644076,Farmland Falls,pr_stunts,danger_sign,1586.8,377.3,4465.7
+danger-sign-festival-leap-20260528134240945675,Festival Leap,pr_stunts,danger_sign,-1872.4,392.3,-1454.5
+danger-sign-highlands-20260528133851968290,Highlands,pr_stunts,danger_sign,3153.6,409.6,4464.6
+danger-sign-highway-jump-20260528134107060354,Highway Jump,pr_stunts,danger_sign,-3059.4,278.8,555.9
+danger-sign-irokawa-launch-20260528134707478687,Irokawa Launch,pr_stunts,danger_sign,-1614.9,240.9,-8932.9
+danger-sign-mt-fuji-view-20260528134335902855,Mt. Fuji View,pr_stunts,danger_sign,-4313.6,417.3,-2551.4
+danger-sign-nangan-heights-20260528134618093797,Nangan Heights,pr_stunts,danger_sign,-3566.9,243.6,-5909.1
+danger-sign-railway-bridge-20260528134030760363,Railway Bridge,pr_stunts,danger_sign,-237.6,155.9,2377.0
+danger-sign-rollercoaster-leap-20260528134402517817,Rollercoaster Leap,pr_stunts,danger_sign,1180.0,158.5,-2478.0
+danger-sign-seaside-heights-20260528134521293017,Seaside Heights,pr_stunts,danger_sign,2605.8,213.5,-5369.0
+danger-sign-shirakawa-go-20260528134144681184,Shirakawa-go,pr_stunts,danger_sign,292.7,199.9,25.0
+danger-sign-stadium-jump-20260528134308293677,Stadium Jump,pr_stunts,danger_sign,-6216.5,233.5,-1937.4
+danger-sign-tanbo-launch-20260528134505121303,Tanbo Launch,pr_stunts,danger_sign,1667.9,134.8,-4186.1
+danger-sign-tokyo-city-dockside-20260528134548899862,Tokyo City Dockside,pr_stunts,danger_sign,357.1,102.3,-5345.1
+danger-sign-tokyo-city-lookout-20260528134437364353,Tokyo City Lookout,pr_stunts,danger_sign,-3879.8,336.0,-3764.6
+drift-zone-bandai-azuma-skyline-20260528135401789871,Bandai Azuma Skyline,pr_stunts,drift_zone,-5284.9,254.5,-2698.1
+drift-zone-cedar-grove-20260528135020178069,Cedar Grove,pr_stunts,drift_zone,1759.5,242.1,3794.6
+drift-zone-hairpin-20260528135539558461,Hairpin,pr_stunts,drift_zone,-3860.8,197.8,-4826.3
+drift-zone-hakone-nanamagari-20260528135827198675,Hakone Nanamagari,pr_stunts,drift_zone,-2632.1,259.7,-7860.4
+drift-zone-inner-city-run-20260528135511272653,Inner City Run,pr_stunts,drift_zone,-876.4,106.9,-4393.2
+drift-zone-kawazu-nanadura-loop-bridge-20260528135724065283,Kawazu Nanadura Loop Bridge,pr_stunts,drift_zone,-4675.5,228.7,-6031.7
+drift-zone-kodachi-run-20260528135334340192,Kodachi Run,pr_stunts,drift_zone,2409.6,116.5,-1623.7
+drift-zone-meoto-iwa-turn-20260528135443228153,Meoto Iwa Turn,pr_stunts,drift_zone,4497.1,104.9,-3390.4
+drift-zone-minamino-horseshoe-20260528135110468003,Minamino Horseshoe,pr_stunts,drift_zone,-481.4,117.1,1519.7
+drift-zone-mt-haruna-20260528134957204063,Mt. Haruna,pr_stunts,drift_zone,4191.7,295.1,4474.9
+drift-zone-nukabira-turn-20260528134832857427,Nukabira Turn,pr_stunts,drift_zone,2383.5,800.8,7947.5
+drift-zone-red-road-20260528135304160899,Red Road,pr_stunts,drift_zone,-5658.2,279.6,-820.2
+drift-zone-river-run-20260528135240689916,River Run,pr_stunts,drift_zone,-651.3,265.4,-880.1
+drift-zone-seaside-trail-20260528135609944668,Seaside Trail,pr_stunts,drift_zone,1845.4,156.7,-5109.8
+drift-zone-shirakawa-curves-20260528135137891081,Shirakawa Curves,pr_stunts,drift_zone,1480.6,145.4,907.2
+drift-zone-shiro-switch-20260528134852803571,Shiro Switch,pr_stunts,drift_zone,2095.7,650.6,7056.9
+drift-zone-sunflower-fields-20260528135208746927,Sunflower Fields,pr_stunts,drift_zone,4410.4,119.8,-334.5
+drift-zone-thunderbird-20260528134922241075,Thunderbird,pr_stunts,drift_zone,-623.7,395.5,5584.8
+drift-zone-tokyo-city-docks-20260528135640798693,Tokyo City Docks,pr_stunts,drift_zone,784.4,102.3,-5816.0
+drift-zone-turbine-trail-20260528135040500993,Turbine Trail,pr_stunts,drift_zone,5586.7,269.8,2372.7
+speed-trap-airfield-runway-20260528091618925498,Airfield Runway,pr_stunts,speed_trap,2577.1,110.4,-1701.3
+speed-trap-akihabara-straight-20260528092141597862,Akihabara Straight,pr_stunts,speed_trap,-634.9,105.5,-5269.5
+speed-trap-bamboo-hilltop-20260528091225840247,Bamboo Hilltop,pr_stunts,speed_trap,793.3,153.4,2497.1
+speed-trap-cedar-woodland-20260528091645875946,Cedar Woodland,pr_stunts,speed_trap,-631.6,191.7,-2141.2
+speed-trap-cropfields-20260528091046404771,Cropfields,pr_stunts,speed_trap,2099.7,425.5,5059.1
+speed-trap-crossover-20260528091135936838,Crossover,pr_stunts,speed_trap,191.9,182.4,4236.3
+speed-trap-daikuko-parking-area-20260528092320041837,Daikuko Parking Area,pr_stunts,speed_trap,-71.7,102.5,-6592.8
+speed-trap-festival-line-20260528091547273462,Festival Line,pr_stunts,speed_trap,-2801.8,412.6,-1037.2
+speed-trap-flower-run-20260528091158213757,Flower Run,pr_stunts,speed_trap,-470.7,175.2,3168.5
+speed-trap-highland-road-20260528091107730923,Highland Road,pr_stunts,speed_trap,4022.2,386.9,4836.4
+speed-trap-hirosaki-castle-20260528091020232475,Hirosaki Castle,pr_stunts,speed_trap,2907.1,523.1,6156.3
+speed-trap-ine-beach-20260528091337165017,Ine Beach,pr_stunts,speed_trap,5948.4,102.9,744.0
+speed-trap-irabuohashi-bridge-20260528091310417115,Irabuohashi Bridge,pr_stunts,speed_trap,3433.4,109.0,2252.4
+speed-trap-island-road-20260528092216033705,Island Road,pr_stunts,speed_trap,4154.6,165.1,-5278.4
+speed-trap-ito-straight-20260528091929443734,Ito Straight,pr_stunts,speed_trap,1893.8,125.4,-3930.2
+speed-trap-izu-skyline-20260528092102721880,Izu Skyline,pr_stunts,speed_trap,-3691.1,151.8,-5200.0
+speed-trap-jodogahama-grove-20260528092427831199,Jodogahama Grove,pr_stunts,speed_trap,-434.1,110.4,-8031.7
+speed-trap-lake-view-20260528092001789090,Lake View,pr_stunts,speed_trap,-5113.6,329.0,-4603.6
+speed-trap-lakeside-valley-20260528091821984261,Lakeside Valley,pr_stunts,speed_trap,-4827.7,287.0,-3320.1
+speed-trap-main-street-20260528091450908588,Main Street,pr_stunts,speed_trap,-5216.7,142.0,199.3
+speed-trap-nangan-turn-20260528092350341134,Nangan Turn,pr_stunts,speed_trap,-2075.3,309.9,-8226.1
+speed-trap-rainbow-run-20260528092244668827,Rainbow Run,pr_stunts,speed_trap,-1360.0,139.6,-6433.4
+speed-trap-river-split-20260528091753641055,River Split,pr_stunts,speed_trap,772.0,111.2,-2741.0
+speed-trap-riverside-20260528091521159575,Riverside,pr_stunts,speed_trap,-1232.8,117.8,-612.0
+speed-trap-shibuya-crossing-20260528092033810183,Shibuya Crossing,pr_stunts,speed_trap,-1449.4,113.4,-4722.0
+speed-trap-shirakawa-go-straight-20260528091424110291,Shirakawa-Go Straight,pr_stunts,speed_trap,1308.5,120.9,268.7
+speed-trap-snow-bank-20260528090849298397,Snow Bank,pr_stunts,speed_trap,-882.3,529.5,6989.3
+speed-trap-stadium-backroad-20260528091721475109,Stadium Backroad,pr_stunts,speed_trap,-7934.0,164.1,-2124.0
+speed-trap-takashiro-bridge-20260528090938404423,Takashiro Bridge,pr_stunts,speed_trap,844.5,432.2,6151.3
+speed-trap-tokyo-city-run-up-20260528091855197450,Tokyo City Run-Up,pr_stunts,speed_trap,-1846.1,127.8,-3504.2
+speed-zone-airfield-grove-20260528133137768732,Airfield Grove,pr_stunts,speed_zone,3493.0,128.6,-1768.9
+speed-zone-arashiyama-run-20260528132659174978,Arashiyama Run,pr_stunts,speed_zone,2714.9,148.5,652.3
+speed-zone-city-sights-20260528133418491711,City Sights,pr_stunts,speed_zone,-669.3,94.5,-5594.1
+speed-zone-coastral-cliffside-20260528133530274247,Coastral Cliffside,pr_stunts,speed_zone,5230.2,120.1,-5658.9
+speed-zone-deep-forest-20260528132321746456,Deep Forest,pr_stunts,speed_zone,2069.6,342.4,4400.0
+speed-zone-farmland-curve-20260528132922070226,Farmland Curve,pr_stunts,speed_zone,1500.5,116.9,-802.9
+speed-zone-festival-loop-20260528133041928076,Festival Loop,pr_stunts,speed_zone,-2143.6,391.4,-1467.8
+speed-zone-forest-straight-20260528133159942901,Forest Straight,pr_stunts,speed_zone,3379.7,127.0,-2837.0
+speed-zone-fuji-shibazakura-20260528133322863673,Fuji Shibazakura,pr_stunts,speed_zone,-7050.7,166.2,-3735.5
+speed-zone-hakone-turns-20260528133603883875,Hakone Turns,pr_stunts,speed_zone,-2703.4,233.3,-7860.5
+speed-zone-hanado-20260528133111600699,Hanado,pr_stunts,speed_zone,-378.4,125.5,-1709.9
+speed-zone-highway-view-20260528132618107744,Highway View,pr_stunts,speed_zone,4425.2,108.4,357.2
+speed-zone-hirosaka-tangle-20260528132154658526,Hirosaka Tangle,pr_stunts,speed_zone,4054.0,582.6,5769.5
+speed-zone-ine-backstreet-20260528132550364926,Ine Backstreet,pr_stunts,speed_zone,5612.4,132.9,1942.8
+speed-zone-kozokudoro-20260528132456896518,Kozokudoro,pr_stunts,speed_zone,-1260.2,131.4,2835.7
+speed-zone-matsumi-curve-20260528133240842695,Matsumi Curve,pr_stunts,speed_zone,-3407.1,234.6,-3566.7
+speed-zone-minamino-curve-20260528132818491356,Minamino Curve,pr_stunts,speed_zone,-247.0,156.8,70.3
+speed-zone-mountain-pass-20260528133016997280,Mountain Pass,pr_stunts,speed_zone,-6550.1,156.8,-213.5
+speed-zone-ocean-highway-20260528133439851473,Ocean Highway,pr_stunts,speed_zone,186.9,125.4,-5443.2
+speed-zone-okishinaimura-20260528132409904115,Okishinaimura,pr_stunts,speed_zone,4283.6,141.1,3352.3
+speed-zone-pylons-20260528132954556239,Pylons,pr_stunts,speed_zone,-4170.2,337.9,-653.6
+speed-zone-seaside-park-20260528133504715410,Seaside Park,pr_stunts,speed_zone,2469.8,159.6,-5651.6
+speed-zone-snow-slopes-20260528132022978711,Snow Slopes,pr_stunts,speed_zone,-290.0,558.3,7206.0
+speed-zone-tall-trees-20260528132521851855,Tall Trees,pr_stunts,speed_zone,1572.2,186.8,2734.5
+speed-zone-tateyama-kurobe-alpine-route-20260528132118834660,Tateyama Kurobe Alpine Route,pr_stunts,speed_zone,1672.9,794.6,7772.8
+speed-zone-tea-farm-20260528132223451361,Tea Farm,pr_stunts,speed_zone,2179.1,380.7,5371.7
+speed-zone-temple-run-up-20260528132255011587,Temple Run-Up,pr_stunts,speed_zone,-1000.3,150.6,4678.0
+speed-zone-underground-tunnel-20260528133354553042,Underground Tunnel,pr_stunts,speed_zone,-1179.9,97.2,-4320.7
+speed-zone-yahikoyama-curve-20260528132733249564,Yahikoyama Curve,pr_stunts,speed_zone,3311.5,211.2,38.0
+speed-zone-yama-trail-20260528132843615913,Yama Trail,pr_stunts,speed_zone,-1835.6,366.5,570.2
+trailblazer-bridge-underpasses-20260528140323139169,Bridge Underpasses,pr_stunts,trailblazer,-4179.4,307.8,-3417.5
+trailblazer-coastal-descent-20260528140434254221,Coastal Descent,pr_stunts,trailblazer,-3273.8,122.7,-6924.2
+trailblazer-forest-cut-through-20260528140112594550,Forest Cut-Through,pr_stunts,trailblazer,2861.6,221.5,3378.0
+trailblazer-horizon-kaido-20260528140017202040,Horizon Kaido,pr_stunts,trailblazer,494.8,729.9,7139.1
+trailblazer-kudarizaka-20260528140157212563,Kudarizaka,pr_stunts,trailblazer,-2641.7,339.2,-303.2
+trailblazer-mountain-descent-20260528140040602248,Mountain Descent,pr_stunts,trailblazer,3765.1,651.6,7017.2
+trailblazer-nachi-falls-20260528135944615106,Nachi Falls,pr_stunts,trailblazer,-704.3,519.5,6757.1
+trailblazer-on-par-20260528140254246968,On Par,pr_stunts,trailblazer,770.0,115.7,-1678.4
+trailblazer-ropeway-run-20260528140226594750,Ropeway Run,pr_stunts,trailblazer,3387.4,147.5,-1214.8
+trailblazer-sekibe-kaijo-20260528140402755793,Sekibe Kaijo,pr_stunts,trailblazer,3388.6,114.5,-3738.7
+cross-country-race-city-docks-cross-country-circuit-20260603100905143574,City Docks Cross Country Circuit,races,cross_country_race,443.6,102.4,-5261.4
+cross-country-race-edogawa-cross-country-circuit-20260603101956324998,Edogawa Cross Country Circuit,races,cross_country_race,-2154.1,115.6,-4748.4
+cross-country-race-izu-cross-country-20260603100402100502,Izu Cross Country,races,cross_country_race,-4536.5,264.8,-6053.5
+cross-country-race-legend-island-cross-country-circuit-20260603101426985104,Legend Island Cross Country Circuit,races,cross_country_race,4702.7,214.6,-5294.6
+cross-country-race-nangan-cross-country-circuit-20260603095958797810,Nangan Cross Country Circuit,races,cross_country_race,-1272.1,120.2,-8891.0
+cross-country-race-naruo-cross-country-circuit-20260603105302057355,Naruo Cross Country Circuit,races,cross_country_race,1054.0,115.1,-799.0
+cross-country-race-oka-cross-country-circuit-20260603110934303313,Oka Cross Country Circuit,races,cross_country_race,-1442.2,115.1,2484.3
+cross-country-race-ruriko-ji-cross-country-20260603122353991447,Ruriko-ji Cross Country,races,cross_country_race,1124.0,1145.2,8710.2
+cross-country-race-shimanoyama-cross-country-20260603103651416284,Shimanoyama Cross Country,races,cross_country_race,-4902.1,411.2,-1244.7
+cross-country-race-shinjuku-gyoen-cross-country-20260603102600428604,Shinjuku Gyoen Cross Country,races,cross_country_race,2376.7,141.6,-4264.6
+cross-country-race-snow-forest-cross-country-circuit-20260603121118180727,Snow Forest Cross Country Circuit,races,cross_country_race,-808.0,524.9,7189.5
+cross-country-race-soni-highlands-cross-country-20260603111424806915,Soni Highlands Cross Country,races,cross_country_race,2384.7,435.1,4920.2
+cross-country-race-stadium-cross-country-circuit-20260603103248101051,Stadium Cross Country Circuit,races,cross_country_race,-7529.8,156.7,-2541.6
+cross-country-race-takashiro-cross-country-20260606080005875067,Takashiro Cross Country,races,cross_country_race,2018.6,612.8,6807.4
+cross-country-race-tateyama-alphine-cross-country-20260603121555859091,Tateyama Alphine Cross Country,races,cross_country_race,2026.4,755.8,7573.1
+cross-country-race-temple-cross-country-20260603104603105623,Temple Cross Country,races,cross_country_race,-2520.2,385.1,-1029.6
+cross-country-race-the-titan-20260606080047855832,The Titan,races,cross_country_race,-1809.7,382.8,-1207.1
+cross-country-race-wind-farm-cross-country-20260603110224436322,Wind Farm Cross Country,races,cross_country_race,3568.4,244.0,-372.0
+cross-country-race-yahikoyama-cross-country-20260603105644040054,Yahikoyama Cross Country,races,cross_country_race,3839.3,184.9,-809.6
+drag-race-horizon-festival-drag-strip-20260513103955890268,Horizon Festival Drag Strip,races,drag_race,-1952.6,392.4,-327.3
+drag-race-irokawa-space-center-drag-strip-20260513103904723346,Irokawa Space Center Drag Strip,races,drag_race,-987.1,117.7,-8651.3
+drag-race-ito-airfield-drag-strip-20260513103933097180,Ito Airfield Drag Strip,races,drag_race,2977.6,119.5,-577.7
+rally-race-airfield-trail-20260603083120807599,Airfield Trail,races,rally_race,910.0,119.8,-1128.0
+rally-race-bamboo-forest-scramble-20260603083744865729,Bamboo Forest Scramble,races,rally_race,2857.8,186.0,-218.9
+rally-race-cherry-field-trail-20260603081342301229,Cherry Field Trail,races,rally_race,-4243.8,360.1,-3124.7
+rally-race-chiheisen-scramble-20260603082816114734,Chiheisen Scramble,races,rally_race,-2208.3,383.7,-1172.0
+rally-race-hirosaki-scramble-20260603091704958662,Hirosaki Scramble,races,rally_race,2705.3,514.0,6373.0
+rally-race-hokubu-trail-20260603085923433482,Hokubu Trail,races,rally_race,2368.0,206.3,3165.8
+rally-race-horizon-stadium-scramble-20260603082418315867,Horizon Stadium Scramble,races,rally_race,-7127.0,158.4,-1862.1
+rally-race-ine-scramble-20260603084246093248,Ine Scramble,races,rally_race,5605.3,105.5,1109.5
+rally-race-ito-trail-20260603084617446431,Ito Trail,races,rally_race,5904.0,101.3,1824.2
+rally-race-kawazu-nanadaru-scramble-20260603074434786575,Kawazu Nanadaru Scramble,races,rally_race,-4960.2,179.2,-5559.3
+rally-race-kinkaku-ji-trail-20260603080814721524,Kinkaku-ji Trail,races,rally_race,-2835.9,133.1,-3642.5
+rally-race-legend-island-trail-20260603073656113741,Legend Island Trail,races,rally_race,4206.3,167.2,-5595.1
+rally-race-nukabira-trail-20260603092132757477,Nukabira Trail,races,rally_race,3108.8,533.4,6362.9
+rally-race-oyashirazu-trail-20260603075631313146,Oyashirazu Trail,races,rally_race,2944.7,130.4,-4091.9
+rally-race-sekibe-scramble-20260603075312384380,Sekibe Scramble,races,rally_race,2459.5,210.2,-4916.5
+rally-race-sotoyama-scramble-20260603093020257896,Sotoyama Scramble,races,rally_race,-838.9,507.7,7549.1
+rally-race-sunflower-scramble-20260603085344907419,Sunflower Scramble,races,rally_race,984.1,125.1,2340.9
+rally-race-taiyaki-scramble-20260603074903309283,Taiyaki Scramble,races,rally_race,-4087.3,332.5,-4745.6
+rally-race-takashiro-trail-20260603091113789279,Takashiro Trail,races,rally_race,1141.6,269.0,5073.4
+rally-race-the-gauntlet-20260603093429978503,The Gauntlet,races,rally_race,1903.1,439.8,6086.3
+rally-race-waterfall-trail-20260603090500711974,Waterfall Trail,races,rally_race,-565.7,330.2,4956.9
+road-race-coastline-sprint-20260602081329839808,Coastline Sprint,races,road_race,-3262.9,123.5,-7842.7
+road-race-daikoku-circuit-20260602084138356781,Daikoku Circuit,races,road_race,50.9,102.5,-6005.6
+road-race-electric-town-circuit-20260602085610414688,Electric Town Circuit,races,road_race,-748.6,105.4,-5035.5
+road-race-festival-sprint-20260602095908276229,Festival Sprint,races,road_race,-2135.5,239.8,-2401.5
+road-race-highway-circuit-20260602090616758118,Highway Circuit,races,road_race,-1715.1,114.6,-4425.9
+road-race-hokubu-circuit-20260602104024638011,Hokubu Circuit,races,road_race,3070.4,117.4,2574.4
+road-race-irokawa-circuit-20260514181441842895,Irokawa Circuit,races,road_race,-1372.1,119.0,-8512.8
+road-race-ito-sprint-20260602101726682055,Ito Sprint,races,road_race,4351.3,104.7,-2340.0
+road-race-legend-island-circuit-20260602084723157966,Legend Island Circuit,races,road_race,4359.8,170.5,-5620.5
+road-race-narai-juku-circuit-20260602102514507650,Narai-Juku Circuit,races,road_race,-5532.2,147.4,54.5
+road-race-satta-sprint-20260602091707775653,Satta Sprint,races,road_race,1691.0,112.8,-4514.1
+road-race-seaside-park-sprint-20260602082708054829,Seaside Park Sprint,races,road_race,2155.1,135.0,-6661.8
+road-race-shikisai-sprint-20260602104611370117,Shikisai Sprint,races,road_race,-10.7,208.5,4121.7
+road-race-shimanoyama-circuit-20260602103652090881,Shimanoyama Circuit,races,road_race,-1896.3,140.4,1439.6
+road-race-shimanoyama-sprint-20260602094607346620,Shimanoyama Sprint,races,road_race,-6328.5,173.0,-3762.6
+road-race-shirakawa-circuit-20260602103037576944,Shirakawa Circuit,races,road_race,1370.1,120.3,448.8
+road-race-soni-circuit-20260602105751280974,Soni Circuit,races,road_race,2552.4,446.7,4854.7
+road-race-tateyama-kurobe-sprint-20260602110307160023,Tateyama Kurobe Sprint,races,road_race,-280.8,501.4,6383.9
+road-race-the-colossus-20260602112802530200,The Colossus,races,road_race,-3776.3,179.1,305.4
+road-race-the-goliath-20260602122035733265,The Goliath,races,road_race,4115.8,135.0,-5040.6
+road-race-tokyo-railway-sprint-20260602092923417114,Tokyo Railway Sprint,races,road_race,179.3,105.5,-3744.8
+road-race-venus-sprint-20260602112734935368,Venus Sprint,races,road_race,3582.4,636.5,6871.6
+street-racing-cedar-run-street-race-20260513103323001041,Cedar Run,races,street_race,163.4,116.5,-845.1
+street-racing-daikoku-chase-street-race-20260513103057908676,Daikoku Chase,races,street_race,-631.8,102.4,-6491.5
+street-racing-festival-chase-street-race-20260513103406885907,Festival Chase,races,street_race,-1866.0,340.4,16.9
+street-racing-hokubu-ascent-street-race-20260513103610667213,Hokubu Ascent,races,street_race,1019.5,131.5,4093.0
+street-racing-kita-ine-street-race-20260513103342597930,Kita Ine,races,street_race,3230.7,153.5,-664.9
+street-racing-matsumi-climb-street-race-20260513103228249262,Matsumi Climb,races,street_race,-4020.4,412.0,-1644.8
+street-racing-minami-chase-street-race-20260513103205422796,Minami Chase,races,street_race,-4511.4,328.5,-3492.8
+street-racing-nachi-run-street-race-20260513103554162325,Nachi Run,races,street_race,-915.7,133.8,3842.9
+street-racing-norikura-descent-street-race-20260513103658773755,Norikura Descent,races,street_race,3263.2,663.7,7290.1
+street-racing-okishinaimura-run-street-race-20260513103636198167,Okishinaimura Run,races,street_race,3825.3,358.1,4640.5
+street-racing-rainbow-bridge-descent-street-race-20260513103118792206,Rainbow Bridge Descent,races,street_race,-3815.2,275.0,-5974.7
+street-racing-river-descent-street-race-20260513103439422238,River Descent,races,street_race,175.9,203.3,109.0
+street-racing-shimanoyama-charge-street-race-20260513103301802716,Shimanoyama Charge,races,street_race,-7134.2,154.4,-1023.6
+street-racing-sunflower-charge-street-race-20260513103500620865,Sunflower Charge,races,street_race,1697.4,126.3,2107.5
+street-racing-tokyo-city-docks-charge-street-race-20260513103144270831,Tokyo City Docks Charge,races,street_race,1172.0,102.4,-5367.7
+touge-race-arashiyama-takao-touge-race-20260513103000600659,Arashiyama Takao,races,touge_race,-339.5,169.4,-1149.8
+touge-race-bandai-azuma-touge-race-20260513102828854896,Bandai Azuma,races,touge_race,-4851.7,400.0,-1448.5
+touge-race-hakone-nanamagari-touge-race-20260513102902875128,Hakone Nanamagari,races,touge_race,-2362.3,349.7,-7548.9
+touge-race-mt-haruna-touge-race-20260513102759026422,Mt. Haruna,races,touge_race,3555.4,635.0,6080.4
+touge-race-norikura-skyline-touge-race-20260513102732782493,Norikura Skyline,races,touge_race,-91.4,562.4,7113.4
