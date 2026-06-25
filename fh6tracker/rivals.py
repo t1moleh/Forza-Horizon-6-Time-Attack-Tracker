@@ -47,13 +47,17 @@ class RivalsTracker:
         Trigger = Wechsel der LastLapTime auf einen neuen Wert > 0. Das ist
         robuster als LapNumber (faengt auch die erste Runde und kommt mit
         Pausen/Run-Neustart klar)."""
-        if not is_rivals(lt):
-            # Pause/Ergebnis-Menue: NICHT zuruecksetzen. In FH6 poppt nach dem
-            # Zieldurchlauf ein Menue auf (race_on=0), genau wenn LastLapTime auf
-            # die eben gefahrene Runde gesetzt wird. Beim Weiterfahren ist sie noch
-            # gesetzt -> so wird die Runde dann nachgetragen statt verloren.
+        if not lt:
             return None
-        assert lt is not None
+        # "Aktiv" = Lap-Felder befuellt: Rivals laeuft ODER das Ergebnis-Menue ist
+        # direkt nach dem Ziel offen. Bewusst NICHT an race_on gebunden - so wird
+        # die gerade beendete Runde auch erkannt, wenn beim Zieldurchlauf das Menue
+        # aufpoppt (race_on=0). Erst bei wirklich leeren Feldern zuruecksetzen.
+        active = bool(lt.get("lap_number") or lt.get("best_lap")
+                      or lt.get("last_lap") or lt.get("current_lap"))
+        if not active:
+            self._prev_last = None
+            return None
         last = float(lt.get("last_lap") or 0.0)
         ln = int(lt.get("lap_number") or 0)
         ev = None

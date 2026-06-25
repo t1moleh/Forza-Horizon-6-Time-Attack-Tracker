@@ -39,9 +39,11 @@ def test_lap_kept_when_results_menu_pops_up():
     rt = RivalsTracker()
     rt.update(_lt(lap=1, cur=5.0, last=0.0))      # Runde 1 laeuft
     rt.update(_lt(lap=1, cur=80.0, last=0.0))     # noch Runde 1
-    assert rt.update(_lt(race_on=0, lap=1, last=92.5)) is None   # Menue: nicht verarbeiten, nicht vergessen
-    ev = rt.update(_lt(lap=2, cur=3.0, last=92.5))               # Weiterfahren -> Runde 1 nachtragen
-    assert ev == RivalsLap(92.5, 1)
+    # Zieldurchlauf + Menue (race_on=0), Lap-Felder noch da -> Runde 1 sofort gewertet
+    ev = rt.update(_lt(race_on=0, lap=1, last=92.5))
+    assert ev is not None and ev.lap_time == 92.5
+    # danach kein erneutes Emit (LastLapTime unveraendert)
+    assert rt.update(_lt(lap=2, cur=3.0, last=92.5)) is None
 
 
 def test_run_restart_resets():
