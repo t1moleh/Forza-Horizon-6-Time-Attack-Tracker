@@ -35,23 +35,28 @@ class RivalsTracker:
     """
 
     def __init__(self) -> None:
-        self._prev_lap_num: int | None = None
+        self._prev_last: float | None = None
 
     def reset(self) -> None:
-        self._prev_lap_num = None
+        self._prev_last = None
 
     def update(self, lt: dict | None) -> RivalsLap | None:
         """Pro Paket fuettern (lt = telemetry.parse_lap_timing). Gibt eine
-        fertige Runde zurueck, sonst None."""
+        fertige Runde zurueck, sonst None.
+
+        Trigger = Wechsel der LastLapTime auf einen neuen Wert > 0. Das ist
+        robuster als LapNumber (faengt auch die erste Runde und kommt mit
+        Pausen/Run-Neustart klar)."""
         if not is_rivals(lt):
-            self._prev_lap_num = None      # Session/Run verlassen
+            self._prev_last = None         # Session/Run verlassen -> Reset
             return None
         assert lt is not None
-        ln = int(lt.get("lap_number") or 0)
         last = float(lt.get("last_lap") or 0.0)
+        ln = int(lt.get("lap_number") or 0)
         ev = None
-        if self._prev_lap_num is not None and ln > self._prev_lap_num and last > 0:
-            # LapNumber ist hochgezaehlt -> die vorige Runde ist fertig.
-            ev = RivalsLap(lap_time=round(last, 3), lap_number=self._prev_lap_num)
-        self._prev_lap_num = ln
+        if (self._prev_last is not None and last > 0
+                and abs(last - self._prev_last) > 1e-6):
+            # LastLapTime hat sich geaendert -> eine Runde ist gerade fertig.
+            ev = RivalsLap(lap_time=round(last, 3), lap_number=max(ln - 1, 0))
+        self._prev_last = last
         return ev

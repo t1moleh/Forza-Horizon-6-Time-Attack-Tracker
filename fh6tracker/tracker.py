@@ -334,9 +334,16 @@ def run_live(data_dir: str, host: str, port: int,
             ev = engine.update(t, pkt)
             riv_ev = rivals.update(lt)               # fertige Rivals-Runde?
             rivals_mode = is_rivals(lt)
-            session.note_mode("rivals" if rivals_mode else "timeattack")
+            if pkt.race_on:    # Modus nur beim aktiven Fahren wechseln (Pause/Menue: behalten)
+                session.note_mode("rivals" if rivals_mode else "timeattack")
+            riv_track_name = None
             if rivals_mode:
                 ev = None    # im Rivals-Modus NICHT die GPS-Runde loggen (Spiel-Timer gilt)
+                _rt = rc.nearest_race(race_list, pkt.x, pkt.z)
+                riv_track_name = _rt.name if _rt else (engine.circuit_name or "Rivals")
+                session.note_rivals(lt.get("current_lap") if lt else None, riv_track_name)
+            else:
+                session.note_rivals(None, None)
             # Live-Delta zur Ghost-Referenz (laufende Runde vs. Bestzeit)
             live_delta = None
             if (engine.circuit_name and engine.lap_start_t is not None
@@ -367,9 +374,8 @@ def run_live(data_dir: str, host: str, port: int,
 
             if riv_ev is not None:
                 # Rivals-Runde aus dem Spiel-Timer: Strecke ueber die Position
-                # erkennen (labs.gg-Registry), Zeit kommt aus dem Spiel.
-                near = rc.nearest_race(race_list, pkt.x, pkt.z)
-                track_name = near.name if near else (engine.circuit_name or "Rivals")
+                # erkannt (labs.gg-Registry), Zeit kommt aus dem Spiel.
+                track_name = riv_track_name or (engine.circuit_name or "Rivals")
                 car_name = names.display(pkt.ordinal)
                 lap_id = datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3] + f"_{pkt.ordinal}"
                 riv_lap = LapEvent(riv_ev.lap_time, t, track_name, pkt, approximate=False)

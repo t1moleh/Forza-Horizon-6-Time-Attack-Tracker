@@ -58,6 +58,8 @@ class SessionState:
         self._live_delta: float | None = None   # Live-Delta zur Bestzeit (Ghost)
         self._telemetry: dict | None = None      # letzte Live-Telemetrie
         self._mode = "timeattack"                 # aktueller Live-Modus
+        self._rivals_lap: float | None = None     # spielinterne CurrentLapTime (Rivals)
+        self._rivals_track: str | None = None     # erkannte Rivals-Strecke
 
         self.laps: list[SessionLap] = []
         self._cars: dict[int, CarInfo] = {}
@@ -81,6 +83,13 @@ class SessionState:
     def note_mode(self, mode: str) -> None:
         with self._lock:
             self._mode = mode
+
+    def note_rivals(self, current_lap: float | None, track: str | None) -> None:
+        """Spielinterne Live-Werte fuer den Rivals-Modus (laufende Rundenzeit +
+        erkannte Strecke)."""
+        with self._lock:
+            self._rivals_lap = current_lap
+            self._rivals_track = track
 
     def note_engine(self, circuit_name: str | None, lap_start_perf: float | None,
                     live_delta: float | None = None) -> None:
@@ -123,7 +132,16 @@ class SessionState:
         """Aktueller Session-Teil des JSON-Vertrags."""
         with self._lock:
             now = time.perf_counter()
-            current_lap = (now - self._lap_start_perf) if self._lap_start_perf else None
+            # Laufende Rundenzeit + Strecke je Modus: im Rivals-Modus aus dem
+            # Spiel-Timer (setzt sauber an der Ziellinie zurueck), sonst GPS.
+            if self._mode == "rivals":
+                cl = self._rivals_lap
+                cur_track = self._rivals_track or self.current_track
+                cur_delta = None
+            else:
+                cl = (now - self._lap_start_perf) if self._lap_start_perf else None
+                cur_track = self.current_track
+                cur_delta = self._live_delta
 
             valid = [lp for lp in self.laps if not lp.approximate]
             # Session-Daten je Modus getrennt (Time Attack / Rivals).
@@ -134,11 +152,11 @@ class SessionState:
                 "started_at": self.started_at,
                 "duration_seconds": round(now - self._start_perf, 1),
                 "current_car": self._car_dict(self.current_car),
-                "current_track": self.current_track,
-                "current_lap_seconds": round(current_lap, 3) if current_lap else None,
-                "current_lap": fmt_time(current_lap) if current_lap else None,
-                "current_delta_seconds": round(self._live_delta, 3) if self._live_delta is not None else None,
-                "current_delta": fmt_delta(self._live_delta),
+                "current_track": cur_track,
+                "current_lap_seconds": round(cl, 3) if cl else None,
+                "current_lap": fmt_time(cl) if cl else None,
+                "current_delta_seconds": round(cur_delta, 3) if cur_delta is not None else None,
+                "current_delta": fmt_delta(cur_delta),
                 "armed": self.armed,
                 # Top-Level = Live-Modus (Abwaertskompat); session_modes = beide.
                 "session_best": live["session_best"],
