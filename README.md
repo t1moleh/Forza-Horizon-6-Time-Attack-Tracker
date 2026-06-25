@@ -1,13 +1,15 @@
 # FH6 Time Attack Lap Tracker
 
-A lightweight tool that **automatically records your lap times on the open‑world
-Time Attack circuits in Forza Horizon 6** and shows them on a clean local
-dashboard — with live telemetry and per‑lap analysis.
+A lightweight tool that **automatically records your lap times in Forza Horizon 6**
+— on the open‑world **Time Attack** circuits *and* in **Rivals** — and shows them
+on a clean local dashboard with live telemetry and per‑lap analysis.
 
-Forza Horizon 6 does **not** send the Time Attack lap time over "Data Out", so
-this tool measures laps itself from your position (a GPS stopwatch): it knows
-each circuit's start/finish line and times every flying lap automatically — no
-learning lap, works across car changes.
+For **Time Attack**, FH6 doesn't send the lap time over "Data Out", so the tool
+measures laps itself from your position (a GPS stopwatch) using each circuit's
+start/finish line — no learning lap, works across car changes. For **Rivals**, it
+reads the game's own lap timer and recognises which track you're on by position. A
+**TIME ATTACK / RIVALS toggle** switches the whole dashboard between the two modes
+(each with its own look), and the times are kept strictly separate.
 
 > **Read‑only.** The tool only *receives* the telemetry packets the game already
 > broadcasts to your own PC. It never reads or writes game memory and sends no
@@ -45,8 +47,8 @@ https://github.com/user-attachments/assets/76979345-0105-4dce-a057-70502e586234
    Port `5300`.
 3. Double‑click the `.exe`. The dashboard opens in **its own app window** — no
    console window.
-4. Drive a Time Attack circuit, times appear automatically. Close the window to
-   stop.
+4. Drive a **Time Attack** circuit or a **Rivals** event — times appear
+   automatically. Close the window to stop.
 
 No Python needed. Your lap times and settings are stored in
 `%APPDATA%\FH6LapTracker` (alongside a `fh6laptracker.log` for troubleshooting),
@@ -71,6 +73,11 @@ on GitHub**, so you can check exactly what it does or compile it yourself.
 
 ## Features
 
+- **Two modes — Time Attack & Rivals.** A prominent toggle switches the whole
+  dashboard; each mode has its own look and keeps its own times, leaderboards and
+  best laps separate. Time Attack is measured by the tool's GPS stopwatch; Rivals
+  uses the game's own lap timer (matches the in‑game time exactly) and recognises
+  the track from your position.
 - **Automatic lap timing** on Time Attack circuits — flying laps, precise
   start/finish line crossing with time interpolation.
 - **Instant circuit recognition** — known tracks are picked up by position; no
@@ -91,11 +98,13 @@ on GitHub**, so you can check exactly what it does or compile it yourself.
 - **Excel export** of all times.
 - **German & English** UI.
 
-## Included circuits
+## Tracks
 
-Comes pre‑calibrated for: **Legend Island, Hokubu, Soni, Sekibe** (Time Attack).
-More can be added easily — record a lap, and the start/finish line is calibrated
-from your driven line.
+**Time Attack** comes pre‑calibrated for **Legend Island, Hokubu, Soni and
+Sekibe**; more can be added by recording a lap (the start/finish line is calibrated
+from your driven line). **Rivals** events are recognised automatically by position
+from a built‑in registry of FH6 race locations, so your Rivals times are grouped
+under the right track name.
 
 ## Car images (optional)
 
@@ -107,11 +116,11 @@ renders (source: labs.gg).
 
 ## A note on the times
 
-The tool uses its own stopwatch (measured from your position), so a lap can
-differ from the in‑game Time Attack timer by a few milliseconds. What matters is
-that it always measures the same way, so every time you record sits on the same
-basis. That makes it ideal for personal use: comparing cars, tunings and
-sessions is fully consistent.
+**Time Attack** uses the tool's own stopwatch (measured from your position), so a
+lap can differ from the in‑game timer by a few milliseconds — but it always
+measures the same way, so all your times sit on the same basis (ideal for
+comparing cars, tunings and sessions). **Rivals** uses the game's own lap timer,
+so those times match the in‑game time exactly.
 
 **Pause and rewind:** for valid times, drive your laps without pausing or using
 rewind. If you pause (the game leaves the active session), the current lap is
