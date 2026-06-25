@@ -29,6 +29,7 @@ class SessionLap:
     approximate: bool
     is_best: bool = False     # Session-Bestzeit dieser (Auto, Strecke)-Kombi
     is_record: bool = False   # persoenliche Bestzeit all-time (Auto, Strecke)
+    mode: str = "timeattack"  # timeattack | rivals
 
 
 @dataclass
@@ -89,16 +90,17 @@ class SessionState:
             self._lap_start_perf = lap_start_perf
             self._live_delta = live_delta
 
-    def add_lap(self, ev: LapEvent, car_name: str, is_record: bool = False) -> bool:
+    def add_lap(self, ev: LapEvent, car_name: str, is_record: bool = False,
+                mode: str = "timeattack") -> bool:
         """Runde aufnehmen. `is_record` = persoenliche Bestzeit all-time (vom
         Aufrufer ermittelt). Gibt True zurueck, wenn es eine neue Session-Bestzeit
-        dieser (Auto, Strecke)-Kombi ist."""
+        dieser (Auto, Strecke, Modus)-Kombi ist."""
         with self._lock:
             is_best = False
             if not ev.approximate:
                 prev = [lp.time_seconds for lp in self.laps
                         if not lp.approximate and lp.car_ordinal == ev.car.ordinal
-                        and lp.track == ev.circuit]
+                        and lp.track == ev.circuit and lp.mode == mode]
                 is_best = not prev or ev.lap_time < min(prev)
             self.laps.append(SessionLap(
                 time_seconds=ev.lap_time,
@@ -111,6 +113,7 @@ class SessionState:
                 approximate=ev.approximate,
                 is_best=is_best,
                 is_record=is_record,
+                mode=mode,
             ))
             return is_best
 
@@ -123,21 +126,9 @@ class SessionState:
             current_lap = (now - self._lap_start_perf) if self._lap_start_perf else None
 
             valid = [lp for lp in self.laps if not lp.approximate]
-            best = min(valid, key=lambda lp: lp.time_seconds) if valid else None
-
-            cars_used = []
-            for ordn, car in self._cars.items():
-                car_laps = [lp for lp in valid if lp.car_ordinal == ordn]
-                if not car_laps:
-                    continue  # nur Autos mit mind. einer gueltigen Runde zeigen
-                cars_used.append({
-                    "ordinal": ordn,
-                    "car_name": car.name,
-                    "class": car.car_class,
-                    "pi": car.pi,
-                    "lap_count": len(car_laps),
-                    "best": fmt_time(min((lp.time_seconds for lp in car_laps), default=None)),
-                })
+            # Session-Daten je Modus getrennt (Time Attack / Rivals).
+            modes = {m: self._mode_view(valid, m) for m in ("timeattack", "rivals")}
+            live = modes.get(self._mode) or modes["timeattack"]
 
             return {
                 "started_at": self.started_at,
@@ -149,13 +140,38 @@ class SessionState:
                 "current_delta_seconds": round(self._live_delta, 3) if self._live_delta is not None else None,
                 "current_delta": fmt_delta(self._live_delta),
                 "armed": self.armed,
-                "session_best": self._lap_dict(best),
-                "last_laps": [self._lap_dict(lp) for lp in reversed(valid[-5:])],
-                "cars_used": cars_used,
-                "lap_count": len(valid),
+                # Top-Level = Live-Modus (Abwaertskompat); session_modes = beide.
+                "session_best": live["session_best"],
+                "last_laps": live["last_laps"],
+                "cars_used": live["cars_used"],
+                "lap_count": live["lap_count"],
+                "session_modes": modes,
                 "telemetry": self._telemetry if self.in_world else None,
                 "mode": self._mode,
             }
+
+    def _mode_view(self, valid: list, mode: str) -> dict:
+        """Session-Teil (Bestzeit/letzte Runden/Autos) fuer EINEN Modus."""
+        laps = [lp for lp in valid if lp.mode == mode]
+        best = min(laps, key=lambda lp: lp.time_seconds) if laps else None
+        cars_used = []
+        for ordn in dict.fromkeys(lp.car_ordinal for lp in laps):
+            car = self._cars.get(ordn)
+            car_laps = [lp for lp in laps if lp.car_ordinal == ordn]
+            cars_used.append({
+                "ordinal": ordn,
+                "car_name": car.name if car else car_laps[0].car_name,
+                "class": car.car_class if car else car_laps[0].car_class,
+                "pi": car.pi if car else car_laps[0].pi,
+                "lap_count": len(car_laps),
+                "best": fmt_time(min(lp.time_seconds for lp in car_laps)),
+            })
+        return {
+            "session_best": self._lap_dict(best),
+            "last_laps": [self._lap_dict(lp) for lp in reversed(laps[-5:])],
+            "cars_used": cars_used,
+            "lap_count": len(laps),
+        }
 
     @staticmethod
     def _car_dict(car: CarInfo | None) -> dict | None:

@@ -373,6 +373,7 @@ def run_live(data_dir: str, host: str, port: int,
                 car_name = names.display(pkt.ordinal)
                 lap_id = datetime.now().strftime("%Y%m%d_%H%M%S_%f")[:-3] + f"_{pkt.ordinal}"
                 riv_lap = LapEvent(riv_ev.lap_time, t, track_name, pkt, approximate=False)
+                session.add_lap(riv_lap, car_name, mode="rivals")
                 log_lap(paths["log"], riv_lap, car_name, lap_id, modus="rivals")
                 rebuild_bestlaps(paths["log"], paths["best"])
                 print(f"\n  >> Rivals-Runde: {fmt_time(riv_ev.lap_time):>9}  |  "

@@ -132,6 +132,20 @@ def test_cars_used_excludes_cars_without_laps():
     assert "Audi" not in names                     # ohne gueltige Runde -> nicht gelistet
 
 
+def test_session_modes_separates_timeattack_and_rivals():
+    sess = SessionState()
+    pkt = Packet(race_on=1, ordinal=253, car_class=3, pi=700, drivetrain=1, x=0.0, z=0.0)
+    sess.note_packet(pkt, lambda o: "Ferrari")
+    sess.add_lap(LapEvent(90.0, 1.0, "T", pkt, approximate=False), "Ferrari", mode="timeattack")
+    sess.add_lap(LapEvent(80.0, 2.0, "T", pkt, approximate=False), "Ferrari", mode="rivals")
+    snap = sess.snapshot()
+    ta = snap["session_modes"]["timeattack"]
+    riv = snap["session_modes"]["rivals"]
+    assert ta["lap_count"] == 1 and riv["lap_count"] == 1
+    assert ta["session_best"]["time_seconds"] == 90.0      # TA-Bestzeit
+    assert riv["session_best"]["time_seconds"] == 80.0     # Rivals-Bestzeit (getrennt)
+
+
 def test_approximate_laps_excluded_from_best():
     sess = SessionState()
     pkt = Packet(1, 253, 3, 700, 1, 0.0, 0.0)
