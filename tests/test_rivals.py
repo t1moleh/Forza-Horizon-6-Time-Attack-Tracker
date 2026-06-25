@@ -32,6 +32,18 @@ def test_no_double_emit_same_lapnumber():
     assert rt.update(_lt(lap=2, last=90.0)) is None               # gleiche Runde -> kein 2. Event
 
 
+def test_lap_kept_when_results_menu_pops_up():
+    # FH6 Rivals: nach Runde 1 oeffnet ein Ergebnis-Menue (race_on=0) genau wenn
+    # LastLapTime auf Runde 1 gesetzt wird. Beim Weiterfahren muss Runde 1 noch
+    # gewertet werden (frueher ging sie verloren).
+    rt = RivalsTracker()
+    rt.update(_lt(lap=1, cur=5.0, last=0.0))      # Runde 1 laeuft
+    rt.update(_lt(lap=1, cur=80.0, last=0.0))     # noch Runde 1
+    assert rt.update(_lt(race_on=0, lap=1, last=92.5)) is None   # Menue: nicht verarbeiten, nicht vergessen
+    ev = rt.update(_lt(lap=2, cur=3.0, last=92.5))               # Weiterfahren -> Runde 1 nachtragen
+    assert ev == RivalsLap(92.5, 1)
+
+
 def test_run_restart_resets():
     rt = RivalsTracker()
     rt.update(_lt(lap=3, last=90.0))

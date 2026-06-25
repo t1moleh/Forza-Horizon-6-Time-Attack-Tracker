@@ -48,7 +48,10 @@ class RivalsTracker:
         robuster als LapNumber (faengt auch die erste Runde und kommt mit
         Pausen/Run-Neustart klar)."""
         if not is_rivals(lt):
-            self._prev_last = None         # Session/Run verlassen -> Reset
+            # Pause/Ergebnis-Menue: NICHT zuruecksetzen. In FH6 poppt nach dem
+            # Zieldurchlauf ein Menue auf (race_on=0), genau wenn LastLapTime auf
+            # die eben gefahrene Runde gesetzt wird. Beim Weiterfahren ist sie noch
+            # gesetzt -> so wird die Runde dann nachgetragen statt verloren.
             return None
         assert lt is not None
         last = float(lt.get("last_lap") or 0.0)
