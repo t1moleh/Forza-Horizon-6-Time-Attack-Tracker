@@ -1,26 +1,28 @@
 # FH6 Time Attack Lap Tracker
 
-A lightweight tool that **automatically records your lap times in Forza Horizon 6**
-— on the open‑world **Time Attack** circuits *and* in **Rivals** — and shows them
-on a clean local dashboard with live telemetry and per‑lap analysis.
+A lightweight tool that **automatically records your lap times in Forza Horizon 6**,
+both on the open-world **Time Attack** circuits and in **Rivals**, and shows them
+on a clean local dashboard with live telemetry and per-lap analysis.
 
 For **Time Attack**, FH6 doesn't send the lap time over "Data Out", so the tool
 measures laps itself from your position (a GPS stopwatch) using each circuit's
-start/finish line — no learning lap, works across car changes. For **Rivals**, it
-reads the game's own lap timer and recognises which track you're on by position. A
-**TIME ATTACK / RIVALS toggle** switches the whole dashboard between the two modes
-(each with its own look), and the times are kept strictly separate.
+start/finish line. No learning lap, and it works across car changes. For
+**Rivals**, it reads the game's own lap timer and recognises which track you're on
+by position. A **TIME ATTACK / RIVALS toggle** switches the whole dashboard
+between the two modes (each with its own look), and the times are kept strictly
+separate.
 
-> **Read‑only.** The tool only *receives* the telemetry packets the game already
+> **Read-only.** The tool only *receives* the telemetry packets the game already
 > broadcasts to your own PC. It never reads or writes game memory and sends no
-> game or personal data anywhere — anti‑cheat‑safe. Your data stays local. (The
-> only network request is a quick version check to GitHub on startup; see Privacy.)
+> game or personal data anywhere, so it's anti-cheat-safe. Your data stays local.
+> (The only network request is a quick version check to GitHub on startup; see
+> Privacy.)
 >
-> **Status: in active development** — feedback and feature wishes very welcome!
+> **Status: in active development.** Feedback and feature wishes very welcome!
 
 ## Screenshots
 
-**Demo** — a quick look at the live dashboard, lap analysis and telemetry:
+**Demo:** a quick look at the live dashboard, lap analysis and telemetry:
 
 https://github.com/user-attachments/assets/76979345-0105-4dce-a057-70502e586234
 
@@ -28,7 +30,7 @@ https://github.com/user-attachments/assets/76979345-0105-4dce-a057-70502e586234
 
 ![Live session](docs/screenshots/session_dark.png)
 
-| Per‑lap analysis | Compare cars / tunings |
+| Per-lap analysis | Compare cars / tunings |
 | --- | --- |
 | ![Per-lap analysis](docs/screenshots/analyze.png) | ![Compare](docs/screenshots/compare.png) |
 
@@ -45,70 +47,70 @@ https://github.com/user-attachments/assets/76979345-0105-4dce-a057-70502e586234
 1. Download `FH6 Lap Tracker.exe` from the latest [release](https://github.com/t1moleh/Forza-Horizon-6-Time-Attack-Tracker/releases/latest).
 2. In Forza Horizon 6: **Settings → HUD → Data Out = ON**, IP `127.0.0.1`,
    Port `5300`.
-3. Double‑click the `.exe`. The dashboard opens in **its own app window** — no
-   console window.
-4. Drive a **Time Attack** circuit or a **Rivals** event — times appear
+3. Double-click the `.exe`. The dashboard opens in **its own app window** (no
+   console window).
+4. Drive a **Time Attack** circuit or a **Rivals** event, times appear
    automatically. Close the window to stop.
 
 No Python needed. Your lap times and settings are stored in
 `%APPDATA%\FH6LapTracker` (alongside a `fh6laptracker.log` for troubleshooting),
-so they **survive updates** — you can replace or move
-the `.exe` and all your recorded times stay intact. (Data from older versions
-that kept files next to the `.exe` is migrated there automatically on first run.)
+so they **survive updates**: you can replace or move the `.exe` and all your
+recorded times stay intact. (Data from older versions that kept files next to the
+`.exe` is migrated there automatically on first run.)
 
-### A Windows warning may pop up — that's normal
+### A Windows warning may pop up (that's normal)
 
-Because this is a small free tool, the `.exe` isn't code‑signed (a certificate is
+Because this is a small free tool, the `.exe` isn't code-signed (a certificate is
 a paid, ongoing cost), so Windows may warn you the first time you run it:
 
-- **SmartScreen** ("Windows protected your PC" / *unknown publisher*) — click
-  **More info → Run anyway**.
+- **SmartScreen** ("Windows protected your PC" / *unknown publisher*): click
+  **More info**, then **Run anyway**.
 - **Smart App Control** (a stricter Windows 11 feature that is off for most
   people) may block it outright. If you have it on, you can build the `.exe`
   yourself from the source, or run it on a machine without Smart App Control.
 
-**Nothing to worry about:** the tool is **read‑only** (it only listens to the
+**Nothing to worry about:** the tool is **read-only** (it only listens to the
 telemetry your game already sends to your own PC) and the **full source code is
 on GitHub**, so you can check exactly what it does or compile it yourself.
 
 ## Features
 
-- **Two modes — Time Attack & Rivals.** A prominent toggle switches the whole
+- **Two modes: Time Attack & Rivals.** A prominent toggle switches the whole
   dashboard; each mode has its own look and keeps its own times, leaderboards and
   best laps separate. Time Attack is measured by the tool's GPS stopwatch; Rivals
-  uses the game's own lap timer (matches the in‑game time exactly) and recognises
+  uses the game's own lap timer (matches the in-game time exactly) and recognises
   the track from your position.
-- **Automatic lap timing** on Time Attack circuits — flying laps, precise
-  start/finish line crossing with time interpolation.
-- **Instant circuit recognition** — known tracks are picked up by position; no
-  learning lap, survives garage/car changes, auto‑switches between circuits.
+- **Automatic lap timing** on Time Attack circuits: flying laps with precise
+  start/finish line crossing and time interpolation.
+- **Instant circuit recognition:** known tracks are picked up by position; no
+  learning lap, survives garage/car changes, auto-switches between circuits.
 - **Live dashboard** (local): current car, running lap timer, **live delta** vs.
   your best lap (green/red), session best, recent laps, cars used.
-- **Telemetry pop‑up**: tyre temperatures, power, torque, throttle/brake (live).
-- **Per‑lap analysis**: click a lap to see speed / throttle / brake / tyre‑slip
+- **Telemetry pop-up**: tyre temperatures, power, torque, throttle/brake (live).
+- **Per-lap analysis**: click a lap to see speed / throttle / brake / tyre-slip
   charts, the sections where you lost the most time vs. your best lap, and
   concrete **improvement tips**.
 - **Compare** two cars or tunings side by side.
 - **Per car & tuning**: lap lists grouped by model + class + PI (different tunes
-  show separately), an overall best‑times ranking per track, and **delete**
+  show separately), an overall best-times ranking per track, and **delete**
   individual laps.
-- **Sound signals**: double‑beep at the finish, beep at the start, a chime on a
-  personal best — configurable.
+- **Sound signals**: double-beep at the finish, beep at the start, a chime on a
+  personal best (configurable).
 - **Dark and Light theme**.
 - **Excel export** of all times.
 - **German & English** UI.
 
 ## Tracks
 
-**Time Attack** comes pre‑calibrated for **Legend Island, Hokubu, Soni and
-Sekibe**; more can be added by recording a lap (the start/finish line is calibrated
-from your driven line). **Rivals** events are recognised automatically by position
-from a built‑in registry of FH6 race locations, so your Rivals times are grouped
-under the right track name.
+**Time Attack** comes pre-calibrated for **Legend Island, Hokubu, Soni and
+Sekibe**; more can be added by recording a lap (the start/finish line is
+calibrated from your driven line). **Rivals** events are recognised automatically
+by position from a built-in registry of FH6 race locations, so your Rivals times
+are grouped under the right track name.
 
 ## Car images (optional)
 
-The dashboard shows a cut‑out image of each car. Around 320 of the most common
+The dashboard shows a cut-out image of each car. Around 320 of the most common
 cars are **built into the .exe**, so they just work. **More car images will be
 added in future updates.** Missing ones show a clean placeholder, and you can
 drop your own image onto a car in the UI to add it. The images are community
@@ -117,10 +119,10 @@ renders (source: labs.gg).
 ## A note on the times
 
 **Time Attack** uses the tool's own stopwatch (measured from your position), so a
-lap can differ from the in‑game timer by a few milliseconds — but it always
+lap can differ from the in-game timer by a few milliseconds, but it always
 measures the same way, so all your times sit on the same basis (ideal for
 comparing cars, tunings and sessions). **Rivals** uses the game's own lap timer,
-so those times match the in‑game time exactly.
+so those times match the in-game time exactly.
 
 **Pause and rewind:** for valid times, drive your laps without pausing or using
 rewind. If you pause (the game leaves the active session), the current lap is
@@ -133,7 +135,7 @@ Detecting and invalidating such laps automatically is planned for a later update
 
 The tool binds a local UDP socket and reads the "Data Out" packets the game sends
 to `127.0.0.1`. It does not read or modify game memory, and it never sends your
-lap times, telemetry or any personal data anywhere — that all stays on your PC.
+lap times, telemetry or any personal data anywhere; that all stays on your PC.
 
 The one exception is a **version check**: on startup the tool makes a single
 read-only request to the public GitHub releases API to see whether a newer
@@ -152,8 +154,8 @@ Found a bug, missing a feature, or got an idea? I read every submission.
 
 ## Roadmap
 
-- More cut‑out car images (currently ~320 of the most common cars)
-- More circuits / community‑contributed start/finish lines
+- More cut-out car images (currently ~320 of the most common cars)
+- More circuits / community-contributed start/finish lines
 - Automatic detection / invalidation of laps with rewind
 - Whatever you suggest 🙂
 
